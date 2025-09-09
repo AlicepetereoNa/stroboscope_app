@@ -12,8 +12,10 @@ logs/
 static/animations/*.mp4
 static/animations/*.json
 static/animations/videos/*.mp4
+static/animations/texts/*.svg
 media/
 temp_files/
+
 
 # OS/Editor
 .DS_Store
