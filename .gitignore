@@ -11,6 +11,7 @@ logs/
 # Manim outputs
 static/animations/*.mp4
 static/animations/*.json
+static/animations/videos/*.mp4
 media/
 temp_files/
 
