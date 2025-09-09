@@ -127,6 +127,29 @@
             font-weight: bold;
             min-width: 60px;
             text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .value-number:hover {
+            background: #2980b9;
+        }
+        
+        .value-number.editing {
+            background: #e74c3c;
+        }
+        
+        .value-input {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: inherit;
         }
         
         .unit {
@@ -310,6 +333,41 @@
             font-weight: bold;
         }
         
+        .history-video-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .history-video-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        
+        .history-video-item video {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .history-video-info {
+            font-size: 0.8em;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .history-video-params {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .history-video-time {
+            color: #7f8c8d;
+            font-size: 0.75em;
+        }
+        
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -339,10 +397,10 @@
                 
                 <div class="preset-buttons">
                     <button class="preset-btn" data-rpm="0" data-hz="0">静止</button>
-                    <button class="preset-btn" data-rpm="30" data-hz="25">慢速</button>
-                    <button class="preset-btn" data-rpm="60" data-hz="30">中速</button>
-                    <button class="preset-btn" data-rpm="90" data-hz="45">快速</button>
-                    <button class="preset-btn" data-rpm="120" data-hz="60">极速</button>
+                    <button class="preset-btn" data-rpm="1.0" data-hz="1.0">同步静止</button>
+                    <button class="preset-btn" data-rpm="1.0" data-hz="1.1">慢动作</button>
+                    <button class="preset-btn" data-rpm="1.0" data-hz="0.9">倒转</button>
+                    <button class="preset-btn" data-rpm="2.0" data-hz="2.0">双倍同步</button>
                 </div>
 
                 <div class="control-group">
@@ -356,13 +414,14 @@
                     </div>
                 </div>
 
+
             <div class="control-group">
-                    <label for="rotationSpeed">旋转速度</label>
+                    <label for="rotationSpeed">旋转频率</label>
                     <div class="slider-container">
-                        <input type="range" id="rotationSpeed" min="0" max="200" value="30" step="1">
+                        <input type="range" id="rotationSpeed" min="0" max="100" value="1" step="0.1">
                         <div class="value-display">
-                            <span class="unit">RPM (转/分钟)</span>
-                            <span class="value-number" id="rotationSpeedValue">30</span>
+                            <span class="unit">Hz (转/秒) - 点击数值可输入</span>
+                            <span class="value-number" id="rotationSpeedValue">1.0</span>
                         </div>
                     </div>
             </div>
@@ -370,10 +429,10 @@
             <div class="control-group">
                     <label for="flashFrequency">闪烁频率</label>
                     <div class="slider-container">
-                        <input type="range" id="flashFrequency" min="0" max="100" value="25" step="1">
+                        <input type="range" id="flashFrequency" min="0" max="100" value="2" step="0.1">
                         <div class="value-display">
-                            <span class="unit">Hz (次/秒)</span>
-                            <span class="value-number" id="flashFrequencyValue">25</span>
+                            <span class="unit">Hz (次/秒) - 点击数值可输入</span>
+                            <span class="value-number" id="flashFrequencyValue">2.0</span>
                         </div>
                     </div>
             </div>
@@ -410,10 +469,17 @@
 
             <div class="video-panel">
                 <h3 style="margin-bottom: 20px; color: #2c3e50;">动画预览</h3>
-        <div class="video-container">
-            <video id="animationVideo" controls autoplay loop muted>
-                您的浏览器不支持视频标签。
-            </video>
+                <div class="video-container">
+                    <video id="animationVideo" controls autoplay loop muted>
+                        您的浏览器不支持视频标签。
+                    </video>
+                </div>
+                
+                <div class="video-history" style="margin-top: 20px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;">历史记录 (最多保存3个)</h4>
+                    <div class="history-videos" id="historyVideos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <!-- 历史视频将在这里动态添加 -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -432,6 +498,15 @@
             
             <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">使用说明：</h4>
             <p>调整旋转速度和闪烁频率参数，观察圆盘上红色标记点的运动效果。尝试不同的参数组合来体验各种频闪现象。</p>
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">频闪效应测试建议：</h4>
+            <ul class="feature-list">
+                <li><strong>静止</strong>：旋转频率=0Hz，闪烁频率=0Hz（圆盘完全静止）</li>
+                <li><strong>同步静止</strong>：旋转频率=1.0Hz，闪烁频率=1.0Hz（圆盘看起来静止）</li>
+                <li><strong>慢动作</strong>：旋转频率=1.0Hz，闪烁频率=1.1Hz（圆盘缓慢正向旋转）</li>
+                <li><strong>倒转</strong>：旋转频率=1.0Hz，闪烁频率=0.9Hz（圆盘反向旋转）</li>
+                <li><strong>双倍同步</strong>：旋转频率=2.0Hz，闪烁频率=2.0Hz（圆盘看起来静止，但频率更高）</li>
+            </ul>
             
             <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">渲染时间：</h4>
             <ul class="feature-list">
@@ -472,7 +547,7 @@
             presets: qsa('.preset-btn'),
         };
 
-        const state = { currentUniqueId: null, intervalId: null };
+        const state = { currentUniqueId: null, intervalId: null, videoHistory: [] };
         const qualityMap = { '1': '快速', '2': '标准', '3': '高质量' };
 
         const setBtnLoading = (btn, loadingText) => { btn.disabled = true; btn.dataset._orig = btn.textContent; btn.textContent = loadingText; };
@@ -480,9 +555,60 @@
 
         const showMessage = (text, type='info') => { els.message.textContent = text; els.message.className = `message ${type}`; };
         const updateSliderDisplay = () => {
-            els.rotationSpeedValue.textContent = els.rotationSpeed.value;
-            els.flashFrequencyValue.textContent = els.flashFrequency.value;
-            els.renderQualityValue.textContent = qualityMap[els.renderQuality.value];
+            // 直接显示Hz值，不需要转换
+            if (els.rotationSpeed && els.rotationSpeedValue) {
+                els.rotationSpeedValue.textContent = parseFloat(els.rotationSpeed.value).toFixed(1);
+            }
+            if (els.flashFrequency && els.flashFrequencyValue) {
+                els.flashFrequencyValue.textContent = parseFloat(els.flashFrequency.value).toFixed(1);
+            }
+            if (els.renderQuality && els.renderQualityValue) {
+                els.renderQualityValue.textContent = qualityMap[els.renderQuality.value];
+            }
+        };
+
+        const makeValueEditable = (valueElement, sliderElement, min, max, step) => {
+            valueElement.addEventListener('click', () => {
+                if (valueElement.classList.contains('editing')) return;
+                
+                const currentValue = parseFloat(valueElement.textContent);
+                valueElement.classList.add('editing');
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'value-input';
+                input.value = currentValue.toFixed(1);
+                input.min = min;
+                input.max = max;
+                input.step = step;
+                
+                const originalText = valueElement.textContent;
+                valueElement.textContent = '';
+                valueElement.appendChild(input);
+                input.focus();
+                input.select();
+                
+                const finishEdit = () => {
+                    const newValue = parseFloat(input.value);
+                    if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+                        sliderElement.value = newValue;
+                        updateSliderDisplay();
+                    } else {
+                        valueElement.textContent = originalText;
+                    }
+                    valueElement.classList.remove('editing');
+                };
+                
+                input.addEventListener('blur', finishEdit);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        finishEdit();
+                    } else if (e.key === 'Escape') {
+                        valueElement.textContent = originalText;
+                        valueElement.classList.remove('editing');
+                    }
+                });
+            });
         };
 
         const showProgress = (progress, text, details) => {
@@ -500,6 +626,51 @@
             }
         };
         const hideProgress = () => { els.progressContainer.style.display = 'none'; els.progressDetails.style.display = 'none'; };
+
+        const addToVideoHistory = (videoUrl, rotationSpeed, flashFrequency, renderQuality) => {
+            const historyItem = {
+                url: videoUrl,
+                rotationSpeed: rotationSpeed,
+                flashFrequency: flashFrequency,
+                renderQuality: renderQuality,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            
+            // 添加到历史记录开头
+            state.videoHistory.unshift(historyItem);
+            
+            // 保持最多3个视频
+            if (state.videoHistory.length > 3) {
+                state.videoHistory = state.videoHistory.slice(0, 3);
+            }
+            
+            updateHistoryDisplay();
+        };
+
+        const updateHistoryDisplay = () => {
+            const historyContainer = qs('#historyVideos');
+            if (!historyContainer) return;
+            
+            historyContainer.innerHTML = '';
+            
+            state.videoHistory.forEach((item, index) => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'history-video-item';
+                videoItem.innerHTML = `
+                    <video controls muted>
+                        <source src="${item.url}" type="video/mp4">
+                        您的浏览器不支持视频标签。
+                    </video>
+                    <div class="history-video-info">
+                        <div class="history-video-params">
+                            旋转: ${(item.rotationSpeed / 60).toFixed(1)}Hz | 闪烁: ${item.flashFrequency.toFixed(1)}Hz
+                        </div>
+                        <div class="history-video-time">${item.timestamp}</div>
+                    </div>
+                `;
+                historyContainer.appendChild(videoItem);
+            });
+        };
 
         const startStatusPolling = () => { stopStatusPolling(); state.intervalId = setInterval(checkRenderStatus, 1000); };
         const stopStatusPolling = () => { if (state.intervalId) { clearInterval(state.intervalId); state.intervalId = null; } };
@@ -530,7 +701,15 @@
                     } else if (state.currentUniqueId && status.progress === 100) {
                         const videoData = await safeFetch(`/get_video/${state.currentUniqueId}`);
                         if (videoData.success) {
-                            els.video.src = videoData.video_url; els.video.load(); els.video.play(); showMessage('动画生成成功！', 'success');
+                            els.video.src = videoData.video_url; els.video.load(); els.video.play(); 
+                            showMessage('动画生成成功！', 'success');
+                            
+                            // 添加到历史记录
+                            const currentRotationSpeedHz = Number(els.rotationSpeed.value);
+                            const currentFlashFrequency = Number(els.flashFrequency.value);
+                            const currentRenderQuality = Number(els.renderQuality.value);
+                            // 历史记录中保存RPM值以保持一致性
+                            addToVideoHistory(videoData.video_url, currentRotationSpeedHz * 60, currentFlashFrequency, currentRenderQuality);
                         }
                     }
                     stopStatusPolling();
@@ -541,10 +720,19 @@
         }
 
         async function generateAnimation() {
-            const rotationSpeed = Number(els.rotationSpeed.value);
+            if (!els.rotationSpeed || !els.flashFrequency || !els.renderQuality) {
+                showMessage('界面元素未完全加载，请刷新页面重试', 'error');
+                return;
+            }
+            
+            const rotationSpeedHz = Number(els.rotationSpeed.value);
             const flashFrequency = Number(els.flashFrequency.value);
             const renderQuality = Number(els.renderQuality.value);
-            if (rotationSpeed < 0 || rotationSpeed > 200) return showMessage('旋转速度必须在0-200 RPM之间', 'error');
+            
+            // 将Hz转换为RPM发送给后端
+            const rotationSpeedRpm = rotationSpeedHz * 60;
+            
+            if (rotationSpeedHz < 0 || rotationSpeedHz > 100) return showMessage('旋转频率必须在0-100 Hz之间', 'error');
             if (flashFrequency < 0 || flashFrequency > 100) return showMessage('闪烁频率必须在0-100 Hz之间', 'error');
 
             const timeEstimates = { 1: '约15-30秒', 2: '约30-60秒', 3: '约60-120秒' };
@@ -552,7 +740,7 @@
             try {
                 const data = await safeFetch('/generate_animation', {
                     method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `rotation_speed=${rotationSpeed}&flash_frequency=${flashFrequency}&render_quality=${renderQuality}`
+                    body: `rotation_speed=${rotationSpeedRpm}&flash_frequency=${flashFrequency}&render_quality=${renderQuality}`
                 });
                 if (data.success) {
                     state.currentUniqueId = data.unique_id;
@@ -580,17 +768,19 @@
             } finally { unsetBtnLoading(els.cleanupBtn); }
         }
 
+        // 更新滑块显示（移除重复定义）
+
         // 事件绑定
-        els.rotationSpeed.addEventListener('input', updateSliderDisplay);
-        els.flashFrequency.addEventListener('input', updateSliderDisplay);
-        els.renderQuality.addEventListener('input', updateSliderDisplay);
+        if (els.rotationSpeed) els.rotationSpeed.addEventListener('input', updateSliderDisplay);
+        if (els.flashFrequency) els.flashFrequency.addEventListener('input', updateSliderDisplay);
+        if (els.renderQuality) els.renderQuality.addEventListener('input', updateSliderDisplay);
         els.generateBtn.addEventListener('click', generateAnimation);
         if (els.cleanupBtn) els.cleanupBtn.addEventListener('click', cleanupTemp);
         if (els.toggleDetails) els.toggleDetails.addEventListener('change', () => {});
         qsa('.preset-btn').forEach(btn => btn.addEventListener('click', () => {
             qsa('.preset-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-            els.rotationSpeed.value = parseInt(btn.dataset.rpm, 10);
-            els.flashFrequency.value = parseInt(btn.dataset.hz, 10);
+            els.rotationSpeed.value = parseFloat(btn.dataset.rpm);
+            els.flashFrequency.value = parseFloat(btn.dataset.hz);
             updateSliderDisplay(); generateAnimation();
         }));
         document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !els.generateBtn.disabled) generateAnimation(); });
@@ -598,7 +788,29 @@
         window.addEventListener('beforeunload', stopStatusPolling);
 
         // 初始化（仅更新显示与预设高亮，不自动开始渲染）
-        document.addEventListener('DOMContentLoaded', () => { updateSliderDisplay(); qsa('.preset-btn')[1]?.classList.add('active'); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            console.log('DOM加载完成，检查元素:', {
+                acceleration: els.acceleration,
+                accelerationValue: els.accelerationValue,
+                rotationSpeed: els.rotationSpeed,
+                flashFrequency: els.flashFrequency,
+                generateBtn: els.generateBtn
+            });
+            
+            // 初始化滑块显示
+            updateSliderDisplay(); 
+            qsa('.preset-btn')[1]?.classList.add('active');
+            
+            // 设置数值可编辑功能
+            if (els.rotationSpeedValue && els.rotationSpeed) {
+                makeValueEditable(els.rotationSpeedValue, els.rotationSpeed, 0, 100, 0.1);
+            }
+            if (els.flashFrequencyValue && els.flashFrequency) {
+                makeValueEditable(els.flashFrequencyValue, els.flashFrequency, 0, 100, 0.1);
+            }
+            
+            console.log('初始化完成');
+        });
     })();
     </script>
 </body>

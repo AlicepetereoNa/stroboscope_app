@@ -67,9 +67,9 @@ def generate_animation():
         flash_frequency_hz = float(request.form.get('flash_frequency', 25))
         render_quality = int(request.form.get('render_quality', 1))
         
-        # 验证参数范围
-        if rotation_speed_rpm < 0 or rotation_speed_rpm > 200:
-            return jsonify({'success': False, 'message': '旋转速度必须在0-200 RPM之间'}), 400
+        # 验证参数范围 (前端发送的是Hz*60的RPM值，所以最大是100*60=6000)
+        if rotation_speed_rpm < 0 or rotation_speed_rpm > 6000:
+            return jsonify({'success': False, 'message': '旋转频率必须在0-100 Hz之间'}), 400
         
         if flash_frequency_hz < 0 or flash_frequency_hz > 100:
             return jsonify({'success': False, 'message': '闪烁频率必须在0-100 Hz之间'}), 400

@@ -1,5 +1,3 @@
-# --- START OF FILE manim_manager.py ---
-
 """
 Manim场景管理器
 负责生成和管理Manim动画场景
@@ -19,7 +17,7 @@ class ManimSceneManager:
     
     def load_scene_template(self) -> str:
         """加载场景模板"""
-        # 尝试从 'src/manim_scenes' 目录加载外部模板文件
+        # 尝试从 'manim_scenes' 目录加载外部模板文件
         template_path = os.path.join(file_manager.scenes_dir, "manim_template.py")
         if os.path.exists(template_path):
             logger.info(f"从 {template_path} 加载Manim场景模板。")
@@ -31,7 +29,7 @@ class ManimSceneManager:
     
     def get_default_template(self) -> str:
         """获取默认模板"""
-        # 注意：这里是修改后的 Manim 场景代码
+        # 完整的频闪效应模拟：圆盘不闪烁，只有指针运动和闪烁
         return """
 from manim import *
 import numpy as np
@@ -41,42 +39,46 @@ class StroboscopicEffectDynamic(Scene):
         # 设置背景
         self.camera.background_color = "#1a1a1a"
         
-        # 创建圆盘（提高对比度与描边）
-        circle_radius = 1.9
-        disk = Circle(radius=circle_radius, color=BLUE_E, fill_opacity=0.85, stroke_width=5)
+        # 创建圆盘（不闪烁，保持可见，不运动）
+        circle_radius = 1.8
+        disk = Circle(radius=circle_radius, color=BLUE, fill_opacity=0.3, stroke_width=3)
         
-        # 创建标记点 - 更少更大更醒目
-        mark_positions = []
-        num_marks = 8  # 更少的标记能更清晰地观察 aliasing
-        for i in range(num_marks):
-            angle = i * 2 * PI / num_marks
-            x = circle_radius * 0.9 * np.cos(angle)
-            y = circle_radius * 0.9 * np.sin(angle)
-            mark_positions.append([x, y, 0])
-        
+        # 创建ABCD四个刻度标记（不闪烁，保持可见）
         marks = VGroup()
-        for pos in mark_positions:
-            mark = Dot(point=pos, radius=0.12, color=RED_E)
+        labels = VGroup()
+        
+        # 四个主要刻度位置：A(0°), B(90°), C(180°), D(270°)
+        positions = [
+            (0, "A"),      # 右侧 (0°)
+            (PI/2, "B"),   # 上方 (90°)
+            (PI, "C"),     # 左侧 (180°)
+            (3*PI/2, "D")  # 下方 (270°)
+        ]
+        
+        for angle, label_text in positions:
+            # 创建刻度线
+            start_point = 1.5 * np.array([np.cos(angle), np.sin(angle), 0])
+            end_point = 1.8 * np.array([np.cos(angle), np.sin(angle), 0])
+            mark = Line(start_point, end_point, color=WHITE, stroke_width=4)
             marks.add(mark)
+            
+            # 创建标签文字
+            label_pos = 1.9 * np.array([np.cos(angle), np.sin(angle), 0])
+            label = Text(label_text, font_size=24, color=YELLOW).move_to(label_pos)
+            labels.add(label)
         
-        # 添加中心点
-        center_dot = Dot(radius=0.12, color=WHITE)
-
-        # 添加几条辐条，进一步增强方向感
-        spokes = VGroup()
-        for theta in [0, PI/2, PI, 3*PI/2]:
-            start = np.array([0, 0, 0])
-            end = np.array([circle_radius * 0.95 * np.cos(theta), circle_radius * 0.95 * np.sin(theta), 0])
-            spoke = Line(start, end, color=WHITE, stroke_width=6)
-            spokes.add(spoke)
+        # 添加中心点（不闪烁，保持可见）
+        center_dot = Dot(radius=0.08, color=RED)
         
-        # 组合所有元素
-        rotating_disk = VGroup(disk, marks, center_dot, spokes)
-
-        # 在顶部添加一个静态参考刻度，帮助感知方向
-        reference_tick = Triangle(fill_opacity=1.0, color=YELLOW_E).scale(0.08)
-        reference_tick.rotate(PI)
-        reference_tick.move_to(np.array([0, circle_radius * 1.08, 0]))
+        # 创建指针（会闪烁和旋转）
+        pointer = Line(ORIGIN, 1.4 * RIGHT, color=YELLOW, stroke_width=6)
+        pointer.add_tip()
+        
+        # 组合圆盘、刻度和标签（静态部分）
+        static_disk = VGroup(disk, marks, labels, center_dot)
+        
+        # 指针单独处理（动态部分）
+        rotating_pointer = VGroup(pointer)
         
         # 添加标题
         title = Text("频闪效应模拟", font_size=36, color=WHITE).to_edge(UP)
@@ -91,67 +93,74 @@ class StroboscopicEffectDynamic(Scene):
         subtitle = Text("旋转速度: %.1f RPM | 闪烁频率: %.1f Hz" % (rotation_speed_rpm, flash_frequency_hz), 
                font_size=20, color=GRAY).next_to(title, DOWN)
         
-        self.add(title, subtitle)
-        self.add(rotating_disk)
-        self.add(reference_tick)
-
-        angular_speed = rotation_speed_rpm * 2 * PI / 60  # RPM to rad/sec
+        # 添加调试信息
+        total_animation_time = 12  # 动画时长
+        total_rotations = rotation_speed_rpm * total_animation_time / 60
+        total_flashes = flash_frequency_hz * total_animation_time
+        rotation_period = 60.0 / rotation_speed_rpm  # 旋转一圈的时间
+        rotation_frequency_hz = rotation_speed_rpm / 60  # 旋转频率(Hz)
+        relative_frequency = flash_frequency_hz - rotation_frequency_hz  # 相对频率
         
-        total_animation_time = 10  # 动画总时长，可以配置
+        # 确定运动方向
+        if relative_frequency > 0:
+            direction_text = "顺时针"
+        elif relative_frequency < 0:
+            direction_text = "逆时针"
+        else:
+            direction_text = "静止"
+            
+        debug_info = Text("旋转: %.1f Hz，闪烁: %.1f Hz，观察: %.2f Hz (%s)" % 
+                         (rotation_frequency_hz, flash_frequency_hz, abs(relative_frequency), direction_text), 
+                         font_size=14, color=GREEN).next_to(subtitle, DOWN)
+        self.add(debug_info)
+        
+        self.add(title, subtitle)
+        self.add(static_disk)  # 添加静态圆盘
+        self.add(rotating_pointer)  # 添加指针
+
+        # 计算真实角速度 (RPM to rad/sec)
+        angular_speed = rotation_speed_rpm * 2 * PI / 60
+        
+        # 添加测试信息
+        rotation_frequency_hz = rotation_speed_rpm / 60
+        relative_frequency = flash_frequency_hz - rotation_frequency_hz
+        test_info = Text("帧运动：旋转%.1fHz，闪烁%.1fHz，相对%.2fHz" % 
+                        (rotation_frequency_hz, flash_frequency_hz, relative_frequency), 
+                        font_size=12, color=RED).to_edge(DOWN).shift(UP*0.5)
+        self.add(test_info)
         
         # 添加说明文字
-        explanation = Text("观察圆盘在频闪下的视觉效果", font_size=24, color=YELLOW).to_edge(DOWN)
+        explanation = Text("观察指针在频闪下的视觉效果 - 圆盘静止，指针旋转", font_size=20, color=YELLOW).to_edge(DOWN)
         self.add(explanation)
         
-        # --- 核心修改部分：处理 flash_frequency_hz == 0 的情况，并优化闪烁逻辑 ---
+        # --- 新的频闪逻辑：指针以相对速率一帧一帧运动 ---
         if flash_frequency_hz == 0:
-            # 如果闪烁频率为0，模拟连续旋转（常亮）
-            # 圆盘持续可见，不进行闪烁逻辑
+            # 如果闪烁频率为0，连续旋转（常亮）
             self.play(
-                Rotate(rotating_disk, angle=angular_speed * total_animation_time, 
+                Rotate(rotating_pointer, angle=angular_speed * total_animation_time, 
                        about_point=ORIGIN, run_time=total_animation_time),
                 rate_func=linear
             )
         else:
-            # 正常频闪逻辑
-            flash_interval = 1 / flash_frequency_hz
-            # 确保 flash_duration 足够长，至少大于一帧时长，且小于或等于 flash_interval 的一定比例
-            # 0.08 是一个相对合理的值，但如果 flash_interval 变得很小，可能需要调整
-            # Manim 默认 60 FPS，所以一帧约 0.016667 秒
-            # 由于该代码在 Manim 场景内运行，不能依赖后端对象，直接按60FPS计算最小帧时长
-            min_frame_duration = 1 / 60
+            # 计算相对频率
+            rotation_frequency_hz = rotation_speed_rpm / 60  # 将RPM转换为Hz
+            relative_frequency = flash_frequency_hz - rotation_frequency_hz  # r - N
             
-            # 为了获得更强的“定格”效果，缩短占空比
-            flash_duration = min(flash_interval * 0.3, 0.08)
-            flash_duration = max(flash_duration, min_frame_duration) # 确保至少一帧时长
-
-            current_time = 0
-            while current_time < total_animation_time:
-                # 计算旋转角度
-                angle_to_rotate = angular_speed * flash_interval
-                
-                # 隐藏阶段（模拟闪光灯关闭）
-                # 只有当非闪烁时间足够长时才执行 FadeOut
-                hide_time = flash_interval - flash_duration
-                if hide_time > min_frame_duration: # 只有隐藏时间大于一帧才执行 FadeOut
-                    self.play(
-                        FadeOut(rotating_disk),
-                        run_time=hide_time,
-                        rate_func=linear
-                    )
-                elif hide_time > 0: # 如果小于一帧但大于0，就等待这段时间
-                    self.wait(hide_time)
-                
-                # 显示阶段（模拟闪光灯开启）
-                # 这里 Rotate 和 FadeIn 同时执行
+            # 使用实际渲染 FPS
+            fps = config.frame_rate
+            frame_duration = 1.0 / fps
+            relative_angular_speed = relative_frequency * 2 * PI  # rad/sec
+            angle_per_frame = relative_angular_speed * frame_duration  # 每帧旋转角度
+            
+            # 计算总帧数
+            total_frames = int(total_animation_time * fps)
+            
+            # 一帧一帧地运动：在同一指针上累计旋转
+            for _ in range(total_frames):
                 self.play(
-                    Rotate(rotating_disk, angle=angle_to_rotate, about_point=ORIGIN, run_time=flash_duration),
-                    FadeIn(rotating_disk),
+                    Rotate(rotating_pointer, angle=angle_per_frame, about_point=ORIGIN, run_time=frame_duration),
                     rate_func=linear
                 )
-                
-                current_time += flash_interval
-        # --- 核心修改部分结束 ---
 
         # 最终等待
         self.wait(2)
@@ -169,7 +178,7 @@ class StroboscopicEffectDynamic(Scene):
         # 关键：每次生成前刷新模板，避免进程热更新后缓存的旧模板仍含有花括号格式
         self.scene_template = self.load_scene_template()
         
-        # 替换模板中的参数，注意：默认模板中只有两个占位符，所以只传递两个参数
+        # 替换模板中的参数
         scene_code = self.scene_template.format(
             rotation_speed_rpm_placeholder=rotation_speed,
             flash_frequency_hz_placeholder=flash_frequency
