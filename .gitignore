@@ -1,0 +1,20 @@
+﻿# Python
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+
+# Logs
+logs/
+
+# Manim outputs
+static/animations/*.mp4
+static/animations/*.json
+media/
+temp_files/
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>频闪效应模拟器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Microsoft YaHei', Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .video-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-group { 
+            margin-bottom: 20px; 
+        }
+        
+        .control-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .slider-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        input[type="range"] { 
+            width: 100%; 
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .value-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .value-number {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .unit {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .preset-btn.active {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        button { 
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white; 
+            padding: 15px 30px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            width: 100%;
+        }
+        
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .progress-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        
+        .progress-info, .progress-animation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .progress-info span, .progress-animation span {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .video-container { 
+            text-align: center; 
+        }
+        
+        video { 
+            max-width: 100%; 
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            background-color: #000;
+        }
+        
+        .message { 
+            margin-top: 15px; 
+            padding: 12px; 
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .message.error { 
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+        
+        .message.success { 
+            background: linear-gradient(45deg, #51cf66, #40c057);
+            color: white;
+        }
+        
+        .message.info {
+            background: linear-gradient(45deg, #74c0fc, #339af0);
+            color: white;
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        
+        .info-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .info-panel p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+        <h1>频闪效应模拟器</h1>
+            <p>探索频闪效应如何影响旋转物体的视觉感知</p>
+        </div>
+
+        <div class="main-content">
+            <div class="controls-panel">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">控制面板</h3>
+                
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-rpm="0" data-hz="0">静止</button>
+                    <button class="preset-btn" data-rpm="30" data-hz="25">慢速</button>
+                    <button class="preset-btn" data-rpm="60" data-hz="30">中速</button>
+                    <button class="preset-btn" data-rpm="90" data-hz="45">快速</button>
+                    <button class="preset-btn" data-rpm="120" data-hz="60">极速</button>
+                </div>
+
+                <div class="control-group">
+                    <label for="renderQuality">渲染质量</label>
+                    <div class="slider-container">
+                        <input type="range" id="renderQuality" min="1" max="3" value="1" step="1">
+                        <div class="value-display">
+                            <span class="unit">质量等级</span>
+                            <span class="value-number" id="renderQualityValue">快速</span>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="control-group">
+                    <label for="rotationSpeed">旋转速度</label>
+                    <div class="slider-container">
+                        <input type="range" id="rotationSpeed" min="0" max="200" value="30" step="1">
+                        <div class="value-display">
+                            <span class="unit">RPM (转/分钟)</span>
+                            <span class="value-number" id="rotationSpeedValue">30</span>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="control-group">
+                    <label for="flashFrequency">闪烁频率</label>
+                    <div class="slider-container">
+                        <input type="range" id="flashFrequency" min="0" max="100" value="25" step="1">
+                        <div class="value-display">
+                            <span class="unit">Hz (次/秒)</span>
+                            <span class="value-number" id="flashFrequencyValue">25</span>
+                        </div>
+                    </div>
+            </div>
+
+            <button id="generateBtn">生成动画</button>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">准备中...</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin:6px 0 10px 0;">
+                        <label style="display:flex;align-items:center;gap:6px;color:#2c3e50;font-size:0.9em;">
+                            <input type="checkbox" id="toggleDetails"> 显示详情
+                        </label>
+                    </div>
+                    <div class="progress-details" id="progressDetails">
+                        <div class="progress-info">
+                            <span id="elapsedTime">已用时间: 0秒</span>
+                            <span id="estimatedTime">预估时间: --</span>
+                        </div>
+                        <div class="progress-animation" id="progressAnimation">
+                            <span id="currentAnimation">当前动画: 0</span>
+                            <span id="totalAnimations">总动画数: 0</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:10px;">
+                    <button id="cleanupBtn" style="width:auto;min-width:140px;background:linear-gradient(45deg,#e67e22,#d35400);">清理临时文件</button>
+                </div>
+                
+            <div class="message" id="statusMessage"></div>
+        </div>
+
+            <div class="video-panel">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">动画预览</h3>
+        <div class="video-container">
+            <video id="animationVideo" controls autoplay loop muted>
+                您的浏览器不支持视频标签。
+            </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>关于频闪效应</h3>
+            <p>频闪效应是一种视觉现象，当快速旋转的物体被间歇性光源（如闪光灯）照射时，由于人眼的视觉暂留效应，会产生特殊的视觉效果。</p>
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">主要特征：</h4>
+            <ul class="feature-list">
+                <li>当闪烁频率与旋转频率同步时，物体看起来静止</li>
+                <li>当闪烁频率略高于旋转频率时，物体看起来缓慢旋转</li>
+                <li>当闪烁频率略低于旋转频率时，物体看起来反向旋转</li>
+                <li>这种现象在工业检测、科学研究等领域有重要应用</li>
+            </ul>
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">使用说明：</h4>
+            <p>调整旋转速度和闪烁频率参数，观察圆盘上红色标记点的运动效果。尝试不同的参数组合来体验各种频闪现象。</p>
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #2c3e50;">渲染时间：</h4>
+            <ul class="feature-list">
+                <li><strong>快速模式</strong>: 约15-30秒 (480p, 适合快速预览)</li>
+                <li><strong>标准模式</strong>: 约30-60秒 (720p, 平衡质量和速度)</li>
+                <li><strong>高质量模式</strong>: 约60-120秒 (1080p, 最佳视觉效果)</li>
+            </ul>
+            <p style="font-size: 0.9em; color: #7f8c8d; margin-top: 10px;">
+                * 实际渲染时间取决于您的硬件配置。首次运行可能需要额外时间加载依赖。
+            </p>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        const qs = (sel) => document.querySelector(sel);
+        const qsa = (sel) => document.querySelectorAll(sel);
+        const els = {
+            rotationSpeed: qs('#rotationSpeed'),
+            rotationSpeedValue: qs('#rotationSpeedValue'),
+            flashFrequency: qs('#flashFrequency'),
+            flashFrequencyValue: qs('#flashFrequencyValue'),
+            renderQuality: qs('#renderQuality'),
+            renderQualityValue: qs('#renderQualityValue'),
+            generateBtn: qs('#generateBtn'),
+            cleanupBtn: qs('#cleanupBtn'),
+            video: qs('#animationVideo'),
+            message: qs('#statusMessage'),
+            progressContainer: qs('#progressContainer'),
+            progressFill: qs('#progressFill'),
+            progressText: qs('#progressText'),
+            progressDetails: qs('#progressDetails'),
+            toggleDetails: qs('#toggleDetails'),
+            elapsedTime: qs('#elapsedTime'),
+            estimatedTime: qs('#estimatedTime'),
+            currentAnimation: qs('#currentAnimation'),
+            totalAnimations: qs('#totalAnimations'),
+            presets: qsa('.preset-btn'),
+        };
+
+        const state = { currentUniqueId: null, intervalId: null };
+        const qualityMap = { '1': '快速', '2': '标准', '3': '高质量' };
+
+        const setBtnLoading = (btn, loadingText) => { btn.disabled = true; btn.dataset._orig = btn.textContent; btn.textContent = loadingText; };
+        const unsetBtnLoading = (btn) => { btn.disabled = false; if (btn.dataset._orig) btn.textContent = btn.dataset._orig; };
+
+        const showMessage = (text, type='info') => { els.message.textContent = text; els.message.className = `message ${type}`; };
+        const updateSliderDisplay = () => {
+            els.rotationSpeedValue.textContent = els.rotationSpeed.value;
+            els.flashFrequencyValue.textContent = els.flashFrequency.value;
+            els.renderQualityValue.textContent = qualityMap[els.renderQuality.value];
+        };
+
+        const showProgress = (progress, text, details) => {
+            els.progressContainer.style.display = 'block';
+            els.progressFill.style.width = `${progress}%`;
+            els.progressText.textContent = text;
+            if (els.toggleDetails && els.toggleDetails.checked && details) {
+                els.progressDetails.style.display = 'block';
+                if (details.elapsed_time) els.elapsedTime.textContent = `已用时间: ${details.elapsed_time}`;
+                if (details.estimated_time) els.estimatedTime.textContent = `预估时间: ${details.estimated_time}`;
+                if (details.current_animation !== undefined) els.currentAnimation.textContent = `当前动画: ${details.current_animation}`;
+                if (details.total_animations !== undefined) els.totalAnimations.textContent = `总动画数: ${details.total_animations}`;
+            } else {
+                els.progressDetails.style.display = 'none';
+            }
+        };
+        const hideProgress = () => { els.progressContainer.style.display = 'none'; els.progressDetails.style.display = 'none'; };
+
+        const startStatusPolling = () => { stopStatusPolling(); state.intervalId = setInterval(checkRenderStatus, 1000); };
+        const stopStatusPolling = () => { if (state.intervalId) { clearInterval(state.intervalId); state.intervalId = null; } };
+
+        async function safeFetch(url, options = {}) {
+            const isPost = (options.method || 'GET').toUpperCase() === 'POST';
+            const fetchOptions = isPost ? options : { cache: 'no-store', ...options };
+            const res = await fetch(url, fetchOptions);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }
+
+        async function checkRenderStatus() {
+            try {
+                const status = await safeFetch('/status');
+                if (status.is_rendering) {
+                    showProgress(status.progress, status.current_task, {
+                        elapsed_time: status.elapsed_time,
+                        estimated_time: status.estimated_time,
+                        current_animation: status.current_animation,
+                        total_animations: status.total_animations,
+                    });
+                    els.generateBtn.disabled = true; els.generateBtn.textContent = '渲染中...';
+                } else {
+                    hideProgress(); unsetBtnLoading(els.generateBtn); els.generateBtn.textContent = '生成动画';
+                    if (status.error) {
+                        showMessage(`渲染失败: ${status.error}`, 'error');
+                    } else if (state.currentUniqueId && status.progress === 100) {
+                        const videoData = await safeFetch(`/get_video/${state.currentUniqueId}`);
+                        if (videoData.success) {
+                            els.video.src = videoData.video_url; els.video.load(); els.video.play(); showMessage('动画生成成功！', 'success');
+                        }
+                    }
+                    stopStatusPolling();
+                }
+            } catch (e) {
+                console.error(e); // 不打断轮询
+            }
+        }
+
+        async function generateAnimation() {
+            const rotationSpeed = Number(els.rotationSpeed.value);
+            const flashFrequency = Number(els.flashFrequency.value);
+            const renderQuality = Number(els.renderQuality.value);
+            if (rotationSpeed < 0 || rotationSpeed > 200) return showMessage('旋转速度必须在0-200 RPM之间', 'error');
+            if (flashFrequency < 0 || flashFrequency > 100) return showMessage('闪烁频率必须在0-100 Hz之间', 'error');
+
+            const timeEstimates = { 1: '约15-30秒', 2: '约30-60秒', 3: '约60-120秒' };
+            showMessage(`正在启动渲染... (${timeEstimates[renderQuality]})`, 'info'); setBtnLoading(els.generateBtn, '准备中...');
+            try {
+                const data = await safeFetch('/generate_animation', {
+                    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `rotation_speed=${rotationSpeed}&flash_frequency=${flashFrequency}&render_quality=${renderQuality}`
+                });
+                if (data.success) {
+                    state.currentUniqueId = data.unique_id;
+                    // 立即展示进度条，替代提示文案
+                    showProgress(5, '启动渲染...');
+                    startStatusPolling(); checkRenderStatus();
+                } else {
+                    unsetBtnLoading(els.generateBtn); showMessage(`错误: ${data.message}`, 'error');
+                }
+            } catch (e) {
+                unsetBtnLoading(els.generateBtn); showMessage(`网络或服务器错误: ${e.message}`, 'error');
+            }
+        }
+
+        async function cleanupTemp() {
+            if (!els.cleanupBtn) return;
+            setBtnLoading(els.cleanupBtn, '清理中...');
+            try {
+                // 加上 force=1，强制清理所有临时场景脚本
+                const res = await safeFetch('/cleanup?force=1', { method: 'POST' });
+                if (res.success) showMessage(`已清理 ${res.deleted_count} 个文件`, 'success');
+                else showMessage(`清理失败: ${res.message || ''}`, 'error');
+            } catch (e) {
+                showMessage(`清理出错: ${e.message}`, 'error');
+            } finally { unsetBtnLoading(els.cleanupBtn); }
+        }
+
+        // 事件绑定
+        els.rotationSpeed.addEventListener('input', updateSliderDisplay);
+        els.flashFrequency.addEventListener('input', updateSliderDisplay);
+        els.renderQuality.addEventListener('input', updateSliderDisplay);
+        els.generateBtn.addEventListener('click', generateAnimation);
+        if (els.cleanupBtn) els.cleanupBtn.addEventListener('click', cleanupTemp);
+        if (els.toggleDetails) els.toggleDetails.addEventListener('change', () => {});
+        qsa('.preset-btn').forEach(btn => btn.addEventListener('click', () => {
+            qsa('.preset-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            els.rotationSpeed.value = parseInt(btn.dataset.rpm, 10);
+            els.flashFrequency.value = parseInt(btn.dataset.hz, 10);
+            updateSliderDisplay(); generateAnimation();
+        }));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !els.generateBtn.disabled) generateAnimation(); });
+        els.video.addEventListener('error', () => showMessage('视频加载失败，请重试或降低质量后再试', 'error'));
+        window.addEventListener('beforeunload', stopStatusPolling);
+
+        // 初始化（仅更新显示与预设高亮，不自动开始渲染）
+        document.addEventListener('DOMContentLoaded', () => { updateSliderDisplay(); qsa('.preset-btn')[1]?.classList.add('active'); });
+    })();
+    </script>
+</body>
+</html>
