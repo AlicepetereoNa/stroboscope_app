@@ -142,15 +142,25 @@ class StroboscopicEffectDynamic(Scene):
                 rate_func=linear
             )
         else:
-            # 计算相对频率
+            # 计算相对频率（引入修正系数 k，使 |fr| ∈ [0,1) ）
             rotation_frequency_hz = rotation_speed_rpm / 60  # 将RPM转换为Hz
-            relative_frequency = flash_frequency_hz - rotation_frequency_hz  # r - N
+            fr_raw = flash_frequency_hz - rotation_frequency_hz  # r - N（可正可负）
+            sign_dir = 1 if fr_raw >= 0 else -1
+            k = int(np.floor(abs(fr_raw)))
+            fr_unit = abs(fr_raw) - k  # ∈ [0,1)
+            fr = sign_dir * fr_unit     # 带方向的相对频率
             
             # 使用实际渲染 FPS
             fps = config.frame_rate
             frame_duration = 1.0 / fps
-            relative_angular_speed = relative_frequency * 2 * PI  # rad/sec
-            angle_per_frame = relative_angular_speed * frame_duration  # 每帧旋转角度
+            relative_angular_speed = fr * 2 * PI  # rad/sec（可正可负）
+            angle_per_frame = relative_angular_speed * frame_duration
+            
+            # 调试信息（覆盖并展示 k 与单位化频率）
+            dir_text = "顺时针" if fr >= 0 else "逆时针"
+            debug2 = Text("k=%d，单位化频率|fr|=%.3f，方向=%s" % (k, fr_unit, dir_text),
+                          font_size=12, color=YELLOW).next_to(test_info, DOWN)
+            self.add(debug2)
             
             # 计算总帧数
             total_frames = int(total_animation_time * fps)
