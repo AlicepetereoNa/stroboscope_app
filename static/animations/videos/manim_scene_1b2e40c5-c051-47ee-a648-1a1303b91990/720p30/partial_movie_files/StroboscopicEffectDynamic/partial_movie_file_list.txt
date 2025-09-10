@@ -1,0 +1,5 @@
+# This file is used internally by FFMPEG.
+file 'file:E:/stroboscope_app/static/animations/videos/manim_scene_1b2e40c5-c051-47ee-a648-1a1303b91990/720p30/partial_movie_files/StroboscopicEffectDynamic/uncached_00000.mp4'
+file 'file:E:/stroboscope_app/static/animations/videos/manim_scene_1b2e40c5-c051-47ee-a648-1a1303b91990/720p30/partial_movie_files/StroboscopicEffectDynamic/uncached_00001.mp4'
+file 'file:E:/stroboscope_app/static/animations/videos/manim_scene_1b2e40c5-c051-47ee-a648-1a1303b91990/720p30/partial_movie_files/StroboscopicEffectDynamic/uncached_00002.mp4'
+file 'file:E:/stroboscope_app/static/animations/videos/manim_scene_1b2e40c5-c051-47ee-a648-1a1303b91990/720p30/partial_movie_files/StroboscopicEffectDynamic/uncached_00003.mp4'
