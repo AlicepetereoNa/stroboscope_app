@@ -59,6 +59,26 @@ def cleanup_old_videos():
         logger.error(f"清理文件失败: {e}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
+@app.route('/cleanup_static', methods=['POST'])
+def cleanup_static():
+    """清理 static 目录。
+    - 默认仅清理 static/animations 下的文件
+    - 传入 force=true 则清理整个 static 下的文件
+    """
+    try:
+        force_flag = False
+        try:
+            force_flag = request.form.get('force', '0').lower() in ['1', 'true']
+        except Exception:
+            force_flag = False
+
+        deleted_count = file_manager.cleanup_static(delete_all_static=force_flag)
+        logger.info(f"清理 static 完成，删除 {deleted_count} 个文件 (force={force_flag})")
+        return jsonify({'success': True, 'deleted_count': deleted_count, 'force': force_flag})
+    except Exception as e:
+        logger.error(f"清理 static 失败: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 @app.route('/generate_animation', methods=['POST'])
 def generate_animation():
     """生成频闪效应动画"""

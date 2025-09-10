@@ -460,8 +460,10 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:flex;gap:10px;margin-top:10px;">
+                <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
                     <button id="cleanupBtn" style="width:auto;min-width:140px;background:linear-gradient(45deg,#e67e22,#d35400);">清理临时文件</button>
+                    <button id="cleanupStaticBtn" style="width:auto;min-width:180px;background:linear-gradient(45deg,#16a085,#13866f);">清理static/animations</button>
+                    <button id="cleanupStaticAllBtn" style="width:auto;min-width:200px;background:linear-gradient(45deg,#c0392b,#a83224);">强制清理整个static</button>
                 </div>
                 
             <div class="message" id="statusMessage"></div>
@@ -533,6 +535,8 @@
             renderQualityValue: qs('#renderQualityValue'),
             generateBtn: qs('#generateBtn'),
             cleanupBtn: qs('#cleanupBtn'),
+            cleanupStaticBtn: qs('#cleanupStaticBtn'),
+            cleanupStaticAllBtn: qs('#cleanupStaticAllBtn'),
             video: qs('#animationVideo'),
             message: qs('#statusMessage'),
             progressContainer: qs('#progressContainer'),
@@ -757,6 +761,7 @@
 
         async function cleanupTemp() {
             if (!els.cleanupBtn) return;
+            if (!window.confirm('确认清理临时文件（含旧场景脚本和过期视频）？')) return;
             setBtnLoading(els.cleanupBtn, '清理中...');
             try {
                 // 加上 force=1，强制清理所有临时场景脚本
@@ -768,6 +773,28 @@
             } finally { unsetBtnLoading(els.cleanupBtn); }
         }
 
+        async function cleanupStatic(force=false) {
+            const btn = force ? els.cleanupStaticAllBtn : els.cleanupStaticBtn;
+            if (!btn) return;
+            const confirmMsg = force ? '确认“强制清理整个 static”下所有文件？（不可恢复）' : '确认清理 static/animations 下所有文件？';
+            if (!window.confirm(confirmMsg)) return;
+            setBtnLoading(btn, '清理中...');
+            try {
+                const body = force ? 'force=true' : '';
+                const res = await safeFetch('/cleanup_static', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+                if (res.success) {
+                    const scope = force ? 'static 全部' : 'static/animations';
+                    showMessage(`已清理 ${scope} 下 ${res.deleted_count} 个文件`, 'success');
+                } else {
+                    showMessage(`清理失败: ${res.message || ''}`, 'error');
+                }
+            } catch (e) {
+                showMessage(`清理出错: ${e.message}`, 'error');
+            } finally {
+                unsetBtnLoading(btn);
+            }
+        }
+
         // 更新滑块显示（移除重复定义）
 
         // 事件绑定
@@ -776,6 +803,8 @@
         if (els.renderQuality) els.renderQuality.addEventListener('input', updateSliderDisplay);
         els.generateBtn.addEventListener('click', generateAnimation);
         if (els.cleanupBtn) els.cleanupBtn.addEventListener('click', cleanupTemp);
+        if (els.cleanupStaticBtn) els.cleanupStaticBtn.addEventListener('click', () => cleanupStatic(false));
+        if (els.cleanupStaticAllBtn) els.cleanupStaticAllBtn.addEventListener('click', () => cleanupStatic(true));
         if (els.toggleDetails) els.toggleDetails.addEventListener('change', () => {});
         qsa('.preset-btn').forEach(btn => btn.addEventListener('click', () => {
             qsa('.preset-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');

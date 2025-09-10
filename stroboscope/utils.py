@@ -105,6 +105,45 @@ class FileManager:
         directories = [self.temp_dir, self.logs_dir, self.scenes_dir, self.video_dir]
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
+
+    def cleanup_static(self, delete_all_static: bool = False) -> int:
+        """清理 static 目录下的文件。
+        - 默认仅清理 `static/animations` 下的文件
+        - 当 delete_all_static=True 时，删除整个 `static` 下的文件（保留目录结构）
+        返回删除的文件数量。
+        """
+        deleted = 0
+        # 默认目标：only animations directory
+        target_dirs = [self.video_dir]
+        if delete_all_static:
+            static_root = os.path.join(str(self.config.project_root), 'static')
+            if os.path.exists(static_root):
+                # 收集 static 下所有子目录
+                subdirs = [os.path.join(static_root, d) for d in os.listdir(static_root)]
+                target_dirs = [p for p in subdirs if os.path.isdir(p)] or [static_root]
+
+        for root_dir in target_dirs:
+            if not os.path.exists(root_dir):
+                continue
+            for root, _, files in os.walk(root_dir):
+                for f in files:
+                    try:
+                        os.remove(os.path.join(root, f))
+                        deleted += 1
+                    except Exception as e:
+                        logger.warning(f"删除静态文件失败: {os.path.join(root, f)} -> {e}")
+
+            # 二次遍历，自底向上删除空目录（不删除根目标目录本身）
+            for root, dirs, files in os.walk(root_dir, topdown=False):
+                # 跳过 root_dir 本身，防止将 animations 或 static 根目录删除
+                if os.path.normpath(root) == os.path.normpath(root_dir):
+                    continue
+                try:
+                    if not os.listdir(root):
+                        os.rmdir(root)
+                except Exception as e:
+                    logger.warning(f"删除空目录失败: {root} -> {e}")
+        return deleted
     
     def cleanup_old_files(self, max_age_hours: int = 1, delete_scenes_all: bool = False) -> int:
         """清理旧文件。增加 delete_scenes_all 参数，用于强制清理所有场景文件。"""
