@@ -6,6 +6,7 @@
 """
 
 import os
+from pathlib import Path
 import shutil
 import time
 import configparser
@@ -19,7 +20,11 @@ class ConfigManager:
     """配置管理器"""
     
     def __init__(self, config_file: str = "config.ini"):
-        self.config_file = config_file
+        # Resolve project root as the repository root: one level up from this package directory
+        self.project_root = Path(__file__).resolve().parents[1]
+        # Ensure config path is relative to project root
+        cfg_path = Path(config_file)
+        self.config_file = str(cfg_path if cfg_path.is_absolute() else self.project_root / cfg_path)
         self.config = configparser.ConfigParser()
         self.load_config()
     
@@ -82,11 +87,11 @@ class FileManager:
     
     def __init__(self, config_manager: ConfigManager):
         self.config = config_manager
-        project_root = os.getcwd()
-        self.temp_dir = os.path.join(project_root, self.config.get('PATHS', 'TEMP_DIR', 'temp_files'))
-        self.logs_dir = os.path.join(project_root, self.config.get('PATHS', 'LOGS_DIR', 'logs'))
-        self.scenes_dir = os.path.join(project_root, self.config.get('PATHS', 'MANIM_SCENES_DIR', 'manim_scenes'))
-        self.video_dir = os.path.join(project_root, self.config.get('PATHS', 'VIDEO_OUTPUT_DIR', 'static/animations'))
+        project_root = config_manager.project_root
+        self.temp_dir = os.path.join(str(project_root), self.config.get('PATHS', 'TEMP_DIR', 'temp_files'))
+        self.logs_dir = os.path.join(str(project_root), self.config.get('PATHS', 'LOGS_DIR', 'logs'))
+        self.scenes_dir = os.path.join(str(project_root), self.config.get('PATHS', 'MANIM_SCENES_DIR', 'manim_scenes'))
+        self.video_dir = os.path.join(str(project_root), self.config.get('PATHS', 'VIDEO_OUTPUT_DIR', 'static/animations'))
         
         # 如果配置里仍是旧路径 src/manim_scenes，则迁移到新路径 manim_scenes
         if os.path.normpath(self.scenes_dir).endswith(os.path.normpath(os.path.join('src', 'manim_scenes'))):

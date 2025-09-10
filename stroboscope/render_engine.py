@@ -299,11 +299,14 @@ class RenderEngine:
         2) 兼容查找项目根下的 media/ 与 media/videos/ 目录
         """
         video_pattern = f"stroboscope_{unique_id}.mp4"
+        # Derive media roots from project root instead of CWD
+        from .utils import config_manager as _cfg
+        project_root = str(_cfg.project_root)
         search_roots = [
             file_manager.video_dir,
             os.path.join(file_manager.video_dir, 'videos'),
-            os.path.join(os.getcwd(), 'media'),
-            os.path.join(os.getcwd(), 'media', 'videos')
+            os.path.join(project_root, 'media'),
+            os.path.join(project_root, 'media', 'videos')
         ]
 
         for root_dir in search_roots:

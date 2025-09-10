@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import time
 import shutil
 import json
@@ -21,7 +22,11 @@ B_ITEMS = [
     ("B-3", 30.0, 0.4, 3),
 ]
 
-TARGET_DIR = os.path.join(os.getcwd(), "experiment_videos")
+# Make target dir relative to this script file location (project-root agnostic)
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR
+# If script placed at project root, this is the root; if moved, still local
+TARGET_DIR = str(PROJECT_ROOT / "experiment_videos")
 os.makedirs(TARGET_DIR, exist_ok=True)
 
 
