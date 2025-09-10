@@ -162,21 +162,21 @@ Bouman 指出：
 
 | 视频编号 | 闪烁频率 (`f`) | 观察现象与分析 |
 | :------- | :------------- | :------------- |
-| **视频 A-1** | 0 Hz | <video src="./experiment_videos/A_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_1.mp4">A_1.mp4</a></video> <br/> **分析：** 无闪烁，指针连续向前旋转，作为对照组。 |
-| **视频 A-2** | 0.5 Hz | <video src="./experiment_videos/A_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_2.mp4">A_2.mp4</a></video> <br/> **分析：** 闪烁频率恰好等于指针旋转频率，指针在视觉上呈现完全静止状态。 |
-| **视频 A-3** | 0.4 Hz | <video src="./experiment_videos/A_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_3.mp4">A_3.mp4</a></video> <br/> **分析：** 闪烁频率略低于指针旋转频率，指针在视觉上呈现慢速反向旋转。 |
-| **视频 A-4** | 0.6 Hz | <video src="./experiment_videos/A_4.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_4.mp4">A_4.mp4</a></video> <br/> **分析：** 闪烁频率略高于指针旋转频率，指针在视觉上呈现慢速正向旋转。 |
-| **视频 A-5** | 0.05 Hz | <video src="./experiment_videos/A_5.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_5.mp4">A_5.mp4</a></video> <br/> **分析：** 闪烁频率极低，每次闪烁时指针已转过较大角度，视觉上呈现不连续的跳跃式反转。 |
-| **视频 A-6** | 1.0 Hz | <video src="./experiment_videos/A_6.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_6.mp4">A_6.mp4</a></video> <br/> **分析：** 闪烁频率是旋转频率的两倍，指针仍向前旋转，但可能与实际速度感知有差异。 |
+| **视频 A-1** | 0 Hz | <video src="../experiment_videos/A_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_1.mp4">A_1.mp4</a></video> <br/> **分析：** 无闪烁，指针连续向前旋转，作为对照组。 |
+| **视频 A-2** | 0.5 Hz | <video src="../experiment_videos/A_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_2.mp4">A_2.mp4</a></video> <br/> **分析：** 闪烁频率恰好等于指针旋转频率，指针在视觉上呈现完全静止状态。 |
+| **视频 A-3** | 0.4 Hz | <video src="../experiment_videos/A_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_3.mp4">A_3.mp4</a></video> <br/> **分析：** 闪烁频率略低于指针旋转频率，指针在视觉上呈现慢速反向旋转。 |
+| **视频 A-4** | 0.6 Hz | <video src="../experiment_videos/A_4.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_4.mp4">A_4.mp4</a></video> <br/> **分析：** 闪烁频率略高于指针旋转频率，指针在视觉上呈现慢速正向旋转。 |
+| **视频 A-5** | 0.05 Hz | <video src="../experiment_videos/A_5.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_5.mp4">A_5.mp4</a></video> <br/> **分析：** 闪烁频率极低，每次闪烁时指针已转过较大角度，视觉上呈现不连续的跳跃式反转。 |
+| **视频 A-6** | 1.0 Hz | <video src="../experiment_videos/A_6.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_6.mp4">A_6.mp4</a></video> <br/> **分析：** 闪烁频率是旋转频率的两倍，指针仍向前旋转，但可能与实际速度感知有差异。 |
 
 **实验二：比较不同视频刷新率 (FPS) 对频闪效应感知的影响**
 *   **条件：** 指针转动频率 **0.5 Hz (30 RPM)**，闪烁频率 **0.4 Hz** (制造反转效果)。
 
 | 视频编号 | 视频刷新率 (FPS) | `render_quality` | 观察现象与分析 |
 | :------- | :--------------- | :--------------- | :------------- |
-| **视频 B-1** | 15 FPS | `1` | <video src="./experiment_videos/B_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_1.mp4">B_1.mp4</a></video> <br/> **分析：** 指针反向旋转，但由于帧率较低，运动感可能较为卡顿和不连贯。 |
-| **视频 B-2** | 30 FPS | `2` | <video src="./experiment_videos/B_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_2.mp4">B_2.mp4</a></video> <br/> **分析：** 指针反向旋转，流畅度有所提升，视觉效果更连续。 |
-| **视频 B-3** | 60 FPS | `3` | <video src="./experiment_videos/B_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_3.mp4">B_3.mp4</a></video> <br/> **分析：** 指针反向旋转，运动最为流畅，视觉错觉更加逼真，接近人眼在真实高频频闪灯下的感知。 |
+| **视频 B-1** | 15 FPS | `1` | <video src="../experiment_videos/B_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_1.mp4">B_1.mp4</a></video> <br/> **分析：** 指针反向旋转，但由于帧率较低，运动感可能较为卡顿和不连贯。 |
+| **视频 B-2** | 30 FPS | `2` | <video src="../experiment_videos/B_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_2.mp4">B_2.mp4</a></video> <br/> **分析：** 指针反向旋转，流畅度有所提升，视觉效果更连续。 |
+| **视频 B-3** | 60 FPS | `3` | <video src="../experiment_videos/B_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_3.mp4">B_3.mp4</a></video> <br/> **分析：** 指针反向旋转，运动最为流畅，视觉错觉更加逼真，接近人眼在真实高频频闪灯下的感知。 |
 
 ### 6. 结论
 
