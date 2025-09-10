@@ -36,6 +36,12 @@ def wait_until_done(timeout_sec: int = 1800) -> dict:
 
 
 def render_one(label: str, rpm: float, r_hz: float, quality: int) -> dict:
+    # If target already exists, skip re-render to save time
+    dst_name = f"{label.replace('-', '_')}.mp4"
+    dst = os.path.join(TARGET_DIR, dst_name)
+    if os.path.exists(dst):
+        return {"label": label, "success": True, "path": dst, "skipped": True}
+
     unique_suffix = str(int(time.time() * 1000))[-6:]
     unique_id = f"{label.lower()}_{unique_suffix}"
 
@@ -68,9 +74,7 @@ def render_one(label: str, rpm: float, r_hz: float, quality: int) -> dict:
         if not src or not os.path.exists(src):
             return {"label": label, "success": False, "error": "video not found"}
 
-    # Copy to target with requested name
-    dst_name = f"{label.replace('-', '_')}.mp4"
-    dst = os.path.join(TARGET_DIR, dst_name)
+    # Copy to target with requested name (safe: we already checked existence)
     shutil.copy2(src, dst)
     return {"label": label, "success": True, "path": dst}
 
