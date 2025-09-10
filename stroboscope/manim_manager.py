@@ -112,8 +112,6 @@ class StroboscopicEffectDynamic(Scene):
         debug_info = Text("旋转: %.1f Hz，闪烁: %.1f Hz，观察: %.2f Hz (%s)" % 
                          (rotation_frequency_hz, flash_frequency_hz, abs(relative_frequency), direction_text), 
                          font_size=14, color=GREEN).next_to(subtitle, DOWN)
-        self.add(debug_info)
-        
         self.add(title, subtitle)
         self.add(static_disk)  # 添加静态圆盘
         self.add(rotating_pointer)  # 添加指针
@@ -126,10 +124,9 @@ class StroboscopicEffectDynamic(Scene):
         relative_frequency = flash_frequency_hz - rotation_frequency_hz
         test_info = Text("帧运动：旋转%.1fHz，闪烁%.1fHz，相对%.2fHz" % 
                         (rotation_frequency_hz, flash_frequency_hz, relative_frequency), 
-                        font_size=12, color=RED).to_edge(DOWN).shift(UP*0.5)
-        self.add(test_info)
+                        font_size=12, color=RED)
         
-        # 添加说明文字
+        # 说明文字固定放在底部，避免与调试信息重叠
         explanation = Text("观察指针在频闪下的视觉效果 - 圆盘静止，指针旋转", font_size=20, color=YELLOW).to_edge(DOWN)
         self.add(explanation)
         
@@ -159,8 +156,7 @@ class StroboscopicEffectDynamic(Scene):
             # 调试信息（覆盖并展示 k 与单位化频率）
             dir_text = "顺时针" if fr >= 0 else "逆时针"
             debug2 = Text("k=%d，单位化频率|fr|=%.3f，方向=%s" % (k, fr_unit, dir_text),
-                          font_size=12, color=YELLOW).next_to(test_info, DOWN)
-            self.add(debug2)
+                          font_size=12, color=YELLOW)
             
             # 计算总帧数
             total_frames = int(total_animation_time * fps)
@@ -171,6 +167,14 @@ class StroboscopicEffectDynamic(Scene):
                     Rotate(rotating_pointer, angle=angle_per_frame, about_point=ORIGIN, run_time=frame_duration),
                     rate_func=linear
                 )
+
+        # 将调试信息分组，统一放置在副标题下方，竖向排列，避免底部重叠
+        info_group = VGroup(debug_info, test_info)
+        if flash_frequency_hz != 0:
+            info_group = VGroup(debug_info, test_info, debug2)
+        info_group.arrange(DOWN, aligned_edge=LEFT, buff=0.1)
+        info_group.next_to(subtitle, DOWN, aligned_edge=LEFT)
+        self.add(info_group)
 
         # 最终等待
         self.wait(2)
