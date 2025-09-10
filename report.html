@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Stroboscope Report</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Stroboscope Report</h1>
+</header>
+<h2 id="综合研究报告车轮逆向旋转现象的视觉机制人类视觉的量子化感知与技术实现">综合研究报告：车轮“逆向旋转”现象的视觉机制、人类视觉的量子化感知与技术实现</h2>
+<h3 id="摘要">摘要</h3>
+<p>本报告旨在深入探讨一种常见的视觉错觉：在车辆向前行驶时，其车轮在电影、电视或慢动作视频中可能呈现出向后旋转的趋势。我们将详细解释其核心原理——<strong>频闪效应</strong>，并在此基础上引入对人类视觉系统本质的最新理解：人眼对时空信号的处理并非完全连续，而是<strong>量子化的</strong>。通过结合摄像设备的离散采样与人脑的量子化感知机制，本报告将全面解析这种引人入胜的视觉现象。我们还将展示一个通过Python Flask应用和Manim动画库实现的频闪效应模拟器，并分析其代码中如何精确控制视频帧率（FPS）以验证理论。</p>
+<h3 id="目录">目录</h3>
+<ul>
+<li><a href="#综合研究报告车轮逆向旋转现象的视觉机制人类视觉的量子化感知与技术实现">综合研究报告：车轮“逆向旋转”现象的视觉机制、人类视觉的量子化感知与技术实现</a>
+<ul>
+<li><a href="#摘要">摘要</a></li>
+<li><a href="#目录">目录</a></li>
+<li><a href="#1-引言">1. 引言</a></li>
+<li><a href="#2-车轮逆向旋转现象的描述">2. 车轮“逆向旋转”现象的描述</a></li>
+<li><a href="#3-核心原理频闪效应-stroboscopic-effect">3. 核心原理：频闪效应 (Stroboscopic Effect)</a>
+<ul>
+<li><a href="#31-摄像机的工作原理与帧率信息源的离散性">3.1 摄像机的工作原理与帧率——信息源的离散性</a></li>
+<li><a href="#32-产生逆向旋转的条件">3.2 产生“逆向旋转”的条件</a></li>
+</ul></li>
+<li><a href="#4-人眼与摄像机感知的根本差异视觉的量子化本质">4. 人眼与摄像机感知的根本差异：视觉的量子化本质</a>
+<ul>
+<li><a href="#41-人眼非连续但模拟的感知系统">4.1 人眼：非连续但模拟的感知系统</a></li>
+<li><a href="#42-为什么人眼会被骗">4.2 为什么人眼会“被骗”？</a></li>
+<li><a href="#43-现实生活中的类频闪效应进一步的证据">4.3 现实生活中的“类频闪效应”：进一步的证据</a></li>
+</ul></li>
+<li><a href="#5-频闪效应模拟器的技术实现与帧率控制">5. 频闪效应模拟器的技术实现与帧率控制</a>
+<ul>
+<li><a href="#51-模拟器架构概述">5.1 模拟器架构概述</a></li>
+<li><a href="#52-视频帧率fps的设置与控制证据">5.2 视频帧率（FPS）的设置与控制证据</a></li>
+<li><a href="#53-实验演示视频">5.3 实验演示视频</a></li>
+</ul></li>
+<li><a href="#6-结论">6. 结论</a></li>
+<li><a href="#7-参考文献">7. 参考文献</a></li>
+</ul></li>
+</ul>
+<hr />
+<h3 id="引言">1. 引言</h3>
+<p>在日常观察中，我们对车轮的旋转方向与车辆的运动方向保持一致的经验根深蒂固。然而，在特定的视觉情境下，特别是通过媒体介质（如电影、电视）观察时，人们常会注意到一个反直觉的现象：车辆明明向前行驶，但车轮却看似向后旋转，甚至在某些速度下呈现静止。这种现象并非物理定律的逆反，而是由信息源的离散性与人类视觉系统固有的感知机制相互作用所产生的视觉错觉，通常被称为“频闪效应”或“车轮效应”。</p>
+<p>传统上，我们认为人眼是一个连续的模拟系统。然而，Maarten A. Bouman在2010年发表的《频闪效应下的人类视觉》等研究指出，人类视觉系统在时空信号处理上是<strong>量子化的</strong>。这意味着对光的感知、颜色、运动和边缘的检测，都是基于离散的量子吸收事件以及这些事件在时间和空间上的成功相互作用。本报告将结合这一前沿理论，全面阐述车轮“逆向旋转”现象的成因，并深入探讨人眼与摄像机在感知上的本质差异及其背后的神经机制。此外，我们将展示一个通过软件实现的模拟器如何精确复现并帮助理解这些复杂的视觉现象。</p>
+<h3 id="车轮逆向旋转现象的描述">2. 车轮“逆向旋转”现象的描述</h3>
+<p>“车轮效应”最典型的表现是，当车轮以高速向前旋转时，我们观察到的车轮似乎以较慢的速度向后旋转，或者在某个临界速度下完全静止。随着车速的进一步增加，车轮可能会再次向前旋转，但在视觉上其旋转速度仍然会低于其实际速度。这种错觉尤其在辐条较多、图案重复性高的车轮上更为显著。</p>
+<h3 id="核心原理频闪效应-stroboscopic-effect">3. 核心原理：频闪效应 (Stroboscopic Effect)</h3>
+<p>这种视觉错觉的核心在于“频闪效应”。频闪效应发生在观察到的连续运动被离散地采样时。</p>
+<h4 id="摄像机的工作原理与帧率信息源的离散性">3.1 摄像机的工作原理与帧率——信息源的离散性</h4>
+<p>在电影和视频中，图像是由一系列静态帧以固定的帧率（Frames Per Second, FPS，例如每秒24帧、30帧或60帧）连续记录和播放而成的。这是一种典型的<strong>离散采样</strong>过程：</p>
+<ol type="1">
+<li><strong>车轮标记物：</strong> 想象车轮上的辐条、轮胎花纹或其他重复性图案作为视觉标记物。</li>
+<li><strong>摄像机采样：</strong> 当车轮旋转时，摄像机在每个极短的曝光时间内捕捉一个静态画面（一帧），记录下车轮在那个瞬间的位置。</li>
+<li><strong>视觉重构：</strong> 当这些静态帧以快速连续的方式播放时，我们的大脑会尝试将这些离散的图像片段连接起来，形成连续的运动感知。</li>
+</ol>
+<h4 id="产生逆向旋转的条件">3.2 产生“逆向旋转”的条件</h4>
+<p>当车轮的实际旋转速度（特别是其辐条通过某个固定点时的速度）与摄像机的帧率之间存在特定数学关系时，就会出现逆向旋转：</p>
+<ul>
+<li><strong>向后旋转：</strong> 如果车轮在两帧之间旋转的角度略小于一个完整的辐条间距，那么在下一帧中，下一个辐条似乎会“倒退”到前一个辐条在上一帧中的位置之前。大脑将其解释为车轮在向后旋转。</li>
+<li><strong>静止不动：</strong> 如果车轮在一个帧的时间间隔内恰好旋转了整整一个辐条间距（或其整数倍），那么在每一帧中，辐条的位置看起来都完全相同。大脑因此感知到车轮处于静止状态。</li>
+<li><strong>向前慢转：</strong> 如果车轮在一个帧的时间间隔内旋转的角度略大于一个辐条间距，那么它看起来会向前旋转，但速度比实际慢，因为每帧之间的“跳跃”幅度较小。</li>
+</ul>
+<h3 id="人眼与摄像机感知的根本差异视觉的量子化本质">4. 人眼与摄像机感知的根本差异：视觉的量子化本质</h3>
+<p>传统上认为人眼是连续感知的，但现代研究，如Bouman的《频闪效应下的人类视觉》，提出了更精细的观点：人类视觉系统并非完全连续，而是在时空维度上存在<strong>量子化处理</strong>的特性。</p>
+<h4 id="人眼非连续但模拟的感知系统">4.1 人眼：非连续但模拟的感知系统</h4>
+<p>人眼本身不是以“帧”的形式来“看”世界的。我们的视觉系统是一个持续接收光刺激并将其转化为神经信号的模拟系统。然而，Bouman的研究表明，对光的感知、颜色、运动和边缘的检测，都是基于离散的量子吸收事件以及这些事件在时间和空间上的成功相互作用。</p>
+<ul>
+<li><strong>时间量子化：</strong> Bouman的实验表明，成功的视觉交互（例如对光的感知）发生在两个连续的、时间量子化为<strong>约 0.04 秒</strong> 的时间段内，并且需要多个低于阈值的受体反应在这些时间窗内发生成功互动。这暗示人眼对时间的处理并非无限精细，而是存在一个基本的“时间单元”或“时间量子”。</li>
+<li><strong>空间量子化：</strong> 类似地，成功的视觉交互也需要在空间上满足一定的条件。实验结果显示，视网膜上不同受体组的低于阈值的响应需要在约 3-6 角分的特定空间范围内发生交互。这表明视觉系统在空间上也是以离散的“受体组”或“空间量子”为单位进行处理的。</li>
+</ul>
+<p>Maarten A. Bouman 在《频闪效应下的人类视觉》中挑战了视觉系统作为纯粹模拟处理器的传统观念，提出了一种基于<strong>时空量子化</strong>的感知模型。他的核心论点是，成功的视觉交互，即对刺激的有效感知，并非建立在连续的、无缝的信息流上，而是依赖于离散的量子事件在特定时空“窗口”内的成功相互作用。</p>
+<p>Bouman 指出： &gt; “It has been found that successful visual interactions take place in a period of two consecutive time quanta of about 0.04 s and require a number of sub-threshold receptor responses to interact successfully within these time windows.” &gt; （“研究发现，成功的视觉交互发生在约 0.04 秒的两个连续时间量子周期内，并且需要多个低于阈值的受体反应在这些时间窗内成功地相互作用。”）</p>
+<p>这表明人眼对时间的处理并非无限精细，而是存在一个基本的“时间单元”或“时间量子”，大约为 0.04 秒。</p>
+<p>类似地，在空间维度上，Bouman 的研究也揭示了量子化特性： &gt; “In the same way, successful visual interactions also have to fulfil conditions in space. It turned out that sub-threshold responses from different receptor groups on the retina have to interact within a particular spatial domain of about 3-6 arc min.” &gt; （“同样，成功的视觉交互也必须满足空间条件。结果表明，视网膜上不同受体组的低于阈值的响应必须在约 3-6 弧分的特定空间域内进行相互作用。”）</p>
+<p>这进一步证实了视觉系统在空间上也是以离散的“受体组”或“空间量子”为单位进行处理的。这些量子化的处理机制，构成了我们对外部世界进行感知的基础。</p>
+<h4 id="为什么人眼会被骗">4.2 为什么人眼会“被骗”？</h4>
+<p>当我们观看由<strong>离散帧组成</strong>的视频时，人眼仍然会受到频闪效应的强烈影响，这不仅仅是信息源离散性那么简单，更深层的原因在于我们大脑的运动推断机制与视觉系统本身的量子化特性。</p>
+<ul>
+<li><strong>信息源的本质：</strong> 视频播放的是一系列快速闪现的静态图片。人眼接收到的是这些间断的、非连续的视觉信息。</li>
+<li><strong>大脑的运动推断机制：</strong> 我们的大脑非常擅长从不完整的信息中推断出完整的情景，并对运动进行预测和解释。当大脑接收到连续播放的、但本身是离散的帧时，它会尝试找到最合理的运动路径。当车轮旋转与视频帧率之间形成特定的“错位”时，大脑会错误地将连续出现的辐条解释为同一个辐条在反向移动，因为这在当时（受限于量子化的时间感知）被大脑识别为最“省力”或最直接的视觉连接方式。</li>
+<li><strong>视觉系统的“主观频闪效应”：</strong> Bouman的研究指出，“车轮效应”也是人类视觉“主观频闪效应”的一种体现。即使在日光下，当运动物体的速度与视觉系统内在的采样频率（即0.04秒的时间量子）发生特定关系时，我们的大脑也会产生类似的错觉。这表明，<strong>即使没有摄像机的干预，人眼在某些情况下也会表现出类似频闪的感知特征，因为其自身的时空处理机制是量子化的。</strong></li>
+</ul>
+<h4 id="现实生活中的类频闪效应进一步的证据">4.3 现实生活中的“类频闪效应”：进一步的证据</h4>
+<ul>
+<li><strong>周期性闪烁的光源：</strong> 在由交流电供电、有轻微闪烁（例如老旧的荧光灯、某些LED灯在低频调光时）的光源下观察快速旋转的物体，人眼会感知到类似于频闪效应的现象。这正是因为光源本身在以特定频率“分帧”式地照射物体，为视觉系统的量子化处理提供了离散的输入。</li>
+<li><strong>眼球不自主震颤 (Involuntary Eye Tremor)：</strong> Bouman还指出，眼睛存在不自主的微小震颤，频率大约在每秒20次左右，这可能与视觉系统的时间处理同步。这种同步的震颤可能有助于视觉系统以类似扫描显微镜的方式进行图像分析，从而实现比光学衍射极限更高的分辨率。这一机制也间接支持了视觉系统存在一种内在的、周期性的信息处理模式。</li>
+<li><strong>其他感知现象：</strong> 超视锐度、闪烁融合、知觉竞争等多种视觉和听觉感知现象，也都被Bouman认为可以从这种量子化的时空信号处理中得到解释，进一步强化了这一理论的普适性。</li>
+</ul>
+<h3 id="频闪效应模拟器的技术实现与帧率控制">5. 频闪效应模拟器的技术实现与帧率控制</h3>
+<p>为了直观演示和验证频闪效应，我们开发了一个基于 Python Flask 框架和 Manim 动画库的频闪效应模拟器。该模拟器允许用户调整指针的旋转速度和闪烁频率，并选择不同的渲染质量，进而生成带有详细参数信息的动画视频。</p>
+<h4 id="模拟器架构概述">5.1 模拟器架构概述</h4>
+<p>模拟器核心由以下模块组成： * <strong><code>app.py</code></strong>: Flask 主应用，处理 Web 请求，调度渲染任务。 * <strong><code>manim_manager.py</code></strong>: 负责生成 Manim 动画场景代码，并管理场景文件。 * <strong><code>render_engine.py</code></strong>: 协调 Manim 命令行渲染过程，监控进度。 * <strong><code>utils.py</code></strong>: 包含配置管理、文件管理、进度监控和日志记录工具。</p>
+<h4 id="视频帧率fps的设置与控制证据">5.2 视频帧率（FPS）的设置与控制证据</h4>
+<p>在我们的模拟器中，视频的帧率是精确可控的核心参数，这直接影响着频闪效应的视觉呈现效果。帧率的设置和传递主要通过以下代码片段实现：</p>
+<ol type="1">
+<li><p><strong><code>config.ini</code> 中的质量设置定义：</strong> 在 <code>utils.py</code> 文件中，<code>ConfigManager</code> 类从 <code>config.ini</code> 文件加载 Manim 渲染的质量设置。<code>QUALITY_SETTINGS</code> 字符串（通过 <code>json.loads</code> 解析）定义了不同 <code>quality_level</code> 对应的帧率： <code>python     # utils.py - ConfigManager.create_default_config() 或 config.ini 文件内容     self.config['MANIM'] = {         'QUALITY_SETTINGS': '{"1": {"flag": "-ql", "name": "快速", "resolution": "480p", "fps": 15, "time_estimate": "15-30秒"}, "2": {"flag": "-qm", "name": "标准", "resolution": "720p", "fps": 30, "time_estimate": "30-60秒"}, "3": {"flag": "-qh", "name": "高质量", "resolution": "1080p", "fps": 60, "time_estimate": "60-120秒"}}'     }</code> 这里明确定义了 <code>render_quality</code> 为 <code>1</code> (快速) 对应 <strong>15 FPS</strong>，<code>2</code> (标准) 对应 <strong>30 FPS</strong>，<code>3</code> (高质量) 对应 <strong>60 FPS</strong>。</p></li>
+<li><p><strong><code>app.py</code> 中接收前端参数：</strong> Flask 应用通过 <code>/generate_animation</code> 路由接收用户选择的 <code>render_quality</code>： <code>python     # app.py - generate_animation()     @app.route('/generate_animation', methods=['POST'])     def generate_animation():         render_quality = int(request.form.get('render_quality', 1)) # 默认值是 1         success = render_engine.render_animation(             rotation_speed_rpm,             flash_frequency_hz,             render_quality, # 此参数传递给渲染引擎，决定最终帧率             unique_id         )</code> <code>render_quality</code> 的值 (<code>1</code>, <code>2</code>, 或 <code>3</code>) 被传递给 <code>render_engine</code>，以选择对应的帧率。</p></li>
+<li><p><strong><code>render_engine.py</code> 中构建 Manim 命令：</strong> <code>RenderEngine</code> 使用 <code>quality_level</code> 获取对应的 FPS，并将其作为命令行参数传递给 Manim： <code>python     # render_engine.py - _render_thread()     class RenderEngine:         def _render_thread(self, rotation_speed: float, flash_frequency: float,                            quality_level: int, unique_id: str, estimated_time: str):             quality_setting = scene_manager.get_quality_setting(quality_level) # 获取 FPS 配置             manim_command = [                 sys.executable, "-m", "manim",                 "--fps", str(quality_setting.get('fps', 60)), # Manim 命令行参数设置 FPS                ]</code> 这一步确保 Manim 渲染器以 <code>config.ini</code> 中为所选 <code>render_quality</code> 定义的精确 FPS 输出视频。</p></li>
+</ol>
+<h4 id="实验演示视频">5.3 实验演示视频</h4>
+<p>以下视频系列通过调整模拟器的参数，直观地展示了频闪效应和不同帧率对视觉感知的影响。</p>
+<p><strong>实验一：探索不同闪烁频率下的频闪效应 (固定 FPS)</strong> * <strong>条件：</strong> 视频刷新率 <strong>30 FPS</strong> (<code>render_quality=2</code>)，指针转动频率 <strong>0.5 Hz (30 RPM)</strong>。</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 38%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">视频编号</th>
+<th style="text-align: left;">闪烁频率 (<code>f</code>)</th>
+<th style="text-align: left;">观察现象与分析</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>视频 A-1</strong></td>
+<td style="text-align: left;">0 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_1.mp4">A_1.mp4</a></video> <br/> <strong>分析：</strong> 无闪烁，指针连续向前旋转，作为对照组。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>视频 A-2</strong></td>
+<td style="text-align: left;">0.5 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_2.mp4">A_2.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率恰好等于指针旋转频率，指针在视觉上呈现完全静止状态。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>视频 A-3</strong></td>
+<td style="text-align: left;">0.4 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_3.mp4">A_3.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略低于指针旋转频率，指针在视觉上呈现慢速反向旋转。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>视频 A-4</strong></td>
+<td style="text-align: left;">0.6 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_4.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_4.mp4">A_4.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略高于指针旋转频率，指针在视觉上呈现慢速正向旋转。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>视频 A-5</strong></td>
+<td style="text-align: left;">0.05 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_5.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_5.mp4">A_5.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率极低，每次闪烁时指针已转过较大角度，视觉上呈现不连续的跳跃式反转。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>视频 A-6</strong></td>
+<td style="text-align: left;">1.0 Hz</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_6.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_6.mp4">A_6.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率是旋转频率的两倍，指针仍向前旋转，但可能与实际速度感知有差异。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>实验二：比较不同视频刷新率 (FPS) 对频闪效应感知的影响</strong> * <strong>条件：</strong> 指针转动频率 <strong>0.5 Hz (30 RPM)</strong>，闪烁频率 <strong>0.4 Hz</strong> (制造反转效果)。</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 29%" />
+<col style="width: 29%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">视频编号</th>
+<th style="text-align: left;">视频刷新率 (FPS)</th>
+<th style="text-align: left;"><code>render_quality</code></th>
+<th style="text-align: left;">观察现象与分析</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>视频 B-1</strong></td>
+<td style="text-align: left;">15 FPS</td>
+<td style="text-align: left;"><code>1</code></td>
+<td style="text-align: left;"><video src="./experiment_videos/B_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_1.mp4">B_1.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，但由于帧率较低，运动感可能较为卡顿和不连贯。</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>视频 B-2</strong></td>
+<td style="text-align: left;">30 FPS</td>
+<td style="text-align: left;"><code>2</code></td>
+<td style="text-align: left;"><video src="./experiment_videos/B_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_2.mp4">B_2.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，流畅度有所提升，视觉效果更连续。</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>视频 B-3</strong></td>
+<td style="text-align: left;">60 FPS</td>
+<td style="text-align: left;"><code>3</code></td>
+<td style="text-align: left;"><video src="./experiment_videos/B_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_3.mp4">B_3.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，运动最为流畅，视觉错觉更加逼真，接近人眼在真实高频频闪灯下的感知。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="结论">6. 结论</h3>
+<p>车轮的“逆向旋转”现象是一种由<strong>信息源的离散采样</strong>与<strong>人类视觉系统的量子化感知机制</strong>共同作用产生的经典视觉错觉。摄像机以固定的帧率对连续运动进行不连续的记录和播放，而人眼/大脑在处理这些离散帧时，并非简单地进行连续化重建。相反，我们的视觉系统本身就以离散的“时间量子”（约0.04秒）和“空间量子”来处理信息。当外界运动的频率与我们视觉系统内在的采样频率（无论是摄像机的帧率还是人眼自身的“时间量子”）发生特定关系时，大脑便会错误地解释运动方向，从而产生反向旋转的错觉。通过我们实现的频闪效应模拟器，我们可以精确控制视频的帧率、指针转速和闪烁频率，生成实验视频，直观地验证这些理论。这一现象深刻揭示了媒体介质对我们视觉感知的塑造作用，并更深层次地揭示了人类视觉系统在构建“真实”世界时的内在机制与局限性。</p>
+<h3 id="参考文献">7. 参考文献</h3>
+<ul>
+<li>Bouman, M. A. (2010). <em>The Stroboscopic Human Vision</em>. Helmholtz Instituut, Utrecht University, The Netherlands.</li>
+<li>Livingstone, M. S., &amp; Hubel, D. H. (1987). Psychophysical evidence for separate channels for the perception of form, color, movement, and depth. <em>Journal of Neuroscience, 7</em>(11), 3416-3468. (关于视觉通路分离的经典研究，支持视觉信息处理的模块化和离散性)</li>
+<li>Kelly, D. H. (1971). Theory of flicker and transient responses, I. Uniform fields. <em>Journal of the Optical Society of America, 61</em>(5), 624-633. (关于视觉闪烁感知的早期定量研究，暗示时间分辨率的限制)</li>
+<li>Rushton, W. A. H. (1961). Rhodopsin kinetics and the regeneration of cones in the living eye. <em>Vision Research, 1</em>(1-2), 22-29. (关于光感受器对光子吸收的量子性质，是视觉量子化感知的生理基础)</li>
+<li>Shadlen, M. N., &amp; Newsome, W. T. (1998). The variable discharge of cortical neurons: implications for neural coding. <em>Journal of Neuroscience, 18</em>(10), 3870-3887. (关于神经元放电的离散性，从神经编码层面支持信息的量子化处理)</li>
+<li>Kolb, H. (2012). <em>Webvision: The Organization of the Retina and Visual System</em>. University of Utah Health Sciences. (关于视网膜组织和视觉系统的全面综述，可提供更广泛的生理学背景)</li>
+</ul>
+</body>
+</html>
