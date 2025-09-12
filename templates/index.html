@@ -551,7 +551,7 @@
             presets: qsa('.preset-btn'),
         };
 
-        const state = { currentUniqueId: null, intervalId: null, videoHistory: [] };
+        const state = { currentUniqueId: null, intervalId: null, videoHistory: [], addedIds: new Set() };
         const qualityMap = { '1': '快速', '2': '标准', '3': '高质量' };
 
         const setBtnLoading = (btn, loadingText) => { btn.disabled = true; btn.dataset._orig = btn.textContent; btn.textContent = loadingText; };
@@ -631,8 +631,12 @@
         };
         const hideProgress = () => { els.progressContainer.style.display = 'none'; els.progressDetails.style.display = 'none'; };
 
-        const addToVideoHistory = (videoUrl, rotationSpeed, flashFrequency, renderQuality) => {
+        const addToVideoHistory = (uniqueId, videoUrl, rotationSpeed, flashFrequency, renderQuality) => {
+            // 去重：同一 uniqueId 或相同 url 不重复添加
+            if (uniqueId && state.addedIds.has(uniqueId)) return;
+            if (state.videoHistory.some(v => v.url === videoUrl)) return;
             const historyItem = {
+                id: uniqueId,
                 url: videoUrl,
                 rotationSpeed: rotationSpeed,
                 flashFrequency: flashFrequency,
@@ -648,6 +652,7 @@
                 state.videoHistory = state.videoHistory.slice(0, 3);
             }
             
+            if (uniqueId) state.addedIds.add(uniqueId);
             updateHistoryDisplay();
         };
 
@@ -713,7 +718,9 @@
                             const currentFlashFrequency = Number(els.flashFrequency.value);
                             const currentRenderQuality = Number(els.renderQuality.value);
                             // 历史记录中保存RPM值以保持一致性
-                            addToVideoHistory(videoData.video_url, currentRotationSpeedHz * 60, currentFlashFrequency, currentRenderQuality);
+                            addToVideoHistory(state.currentUniqueId, videoData.video_url, currentRotationSpeedHz * 60, currentFlashFrequency, currentRenderQuality);
+                            // 标记已处理完成，避免重复添加
+                            state.currentUniqueId = null;
                         }
                     }
                     stopStatusPolling();

@@ -81,7 +81,7 @@ class StroboscopicEffectDynamic(Scene):
         rotating_pointer = VGroup(pointer)
         
         # 添加标题
-        title = Text("频闪效应模拟", font_size=36, color=WHITE).to_edge(UP)
+        title = Text("频闪效应模拟", font_size=36, color=WHITE, font="{font_family_placeholder}").to_edge(UP)
         
         # --- 从外部传入的参数，通过format替换 ---
         rotation_speed_rpm = {rotation_speed_rpm_placeholder}
@@ -91,7 +91,7 @@ class StroboscopicEffectDynamic(Scene):
         # 注意：此模板最终会被外层 Python 的 format() 处理，
         # 因此避免在源码中再使用花括号格式，改用百分号格式，防止 KeyError
         subtitle = Text("旋转速度: %.1f RPM | 闪烁频率: %.1f Hz" % (rotation_speed_rpm, flash_frequency_hz), 
-               font_size=20, color=GRAY).next_to(title, DOWN)
+               font_size=20, color=GRAY, font="{font_family_placeholder}").next_to(title, DOWN)
         
         # 添加调试信息
         total_animation_time = 12  # 动画时长
@@ -111,7 +111,7 @@ class StroboscopicEffectDynamic(Scene):
             
         debug_info = Text("旋转: %.1f Hz，闪烁: %.1f Hz，观察: %.2f Hz (%s)" % 
                          (rotation_frequency_hz, flash_frequency_hz, abs(relative_frequency), direction_text), 
-                         font_size=14, color=GREEN).next_to(subtitle, DOWN)
+                         font_size=14, color=GREEN, font="{font_family_placeholder}").next_to(subtitle, DOWN)
         self.add(title, subtitle)
         self.add(static_disk)  # 添加静态圆盘
         self.add(rotating_pointer)  # 添加指针
@@ -124,10 +124,10 @@ class StroboscopicEffectDynamic(Scene):
         relative_frequency = flash_frequency_hz - rotation_frequency_hz
         test_info = Text("帧运动：旋转%.1fHz，闪烁%.1fHz，相对%.2fHz" % 
                         (rotation_frequency_hz, flash_frequency_hz, relative_frequency), 
-                        font_size=12, color=RED)
+                        font_size=12, color=RED, font="{font_family_placeholder}")
         
         # 说明文字固定放在底部，避免与调试信息重叠
-        explanation = Text("观察指针在频闪下的视觉效果 - 圆盘静止，指针旋转", font_size=20, color=YELLOW).to_edge(DOWN)
+        explanation = Text("观察指针在频闪下的视觉效果 - 圆盘静止，指针旋转", font_size=20, color=YELLOW, font="{font_family_placeholder}").to_edge(DOWN)
         self.add(explanation)
         
         # --- 新的频闪逻辑：指针以相对速率一帧一帧运动 ---
@@ -156,7 +156,7 @@ class StroboscopicEffectDynamic(Scene):
             # 调试信息（覆盖并展示 k 与单位化频率）
             dir_text = "顺时针" if fr >= 0 else "逆时针"
             debug2 = Text("k=%d，单位化频率|fr|=%.3f，方向=%s" % (k, fr_unit, dir_text),
-                          font_size=12, color=YELLOW)
+                          font_size=12, color=YELLOW, font="{font_family_placeholder}")
             
             # 计算总帧数
             total_frames = int(total_animation_time * fps)
@@ -180,7 +180,7 @@ class StroboscopicEffectDynamic(Scene):
         self.wait(2)
         
         # 显示结束文字
-        end_text = Text("动画结束", font_size=32, color=GREEN).move_to(ORIGIN)
+        end_text = Text("动画结束", font_size=32, color=GREEN, font="{font_family_placeholder}").move_to(ORIGIN)
         self.play(Write(end_text))
         self.wait(1)
 """
@@ -193,9 +193,12 @@ class StroboscopicEffectDynamic(Scene):
         self.scene_template = self.load_scene_template()
         
         # 替换模板中的参数
+        # 从配置读取中文字体，默认 Noto Sans CJK SC（需在服务器安装）
+        font_family = config_manager.get('APP', 'FONT_FAMILY', 'Noto Sans CJK SC')
         scene_code = self.scene_template.format(
             rotation_speed_rpm_placeholder=rotation_speed,
-            flash_frequency_hz_placeholder=flash_frequency
+            flash_frequency_hz_placeholder=flash_frequency,
+            font_family_placeholder=font_family
         )
         
         # 生成文件路径

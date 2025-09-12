@@ -201,7 +201,17 @@ class RenderEngine:
                         progress_monitor.update_progress(90, "处理输出文件...")
                         found_video_path = self._find_generated_video(unique_id)
                         if found_video_path and os.path.exists(found_video_path):
-                            final_video_output_path = found_video_path
+                            # 与 OpenGL 成功路径保持一致：尽量将结果复制到统一目录 static/animations 下
+                            try:
+                                if os.path.normpath(found_video_path) != os.path.normpath(final_video_output_path):
+                                    os.makedirs(os.path.dirname(final_video_output_path), exist_ok=True)
+                                    shutil.copy2(found_video_path, final_video_output_path)
+                                    logger.info(f"已将视频复制到统一目录: {final_video_output_path}")
+                                final_video_output_path = final_video_output_path
+                            except Exception as cp_err:
+                                logger.warning(f"复制渲染结果到统一目录失败，将直接使用原始路径: {found_video_path}，错误: {cp_err}")
+                                final_video_output_path = found_video_path
+
                             progress_monitor.finish_render(success=True)
                             logger.info(f"动画渲染完成(回退cairo): {output_filename}, 路径: {final_video_output_path}")
                         else:
