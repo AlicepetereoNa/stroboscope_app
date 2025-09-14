@@ -142,11 +142,131 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}   
   </style>
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
+<script>
+// 代码复制功能
+function copyCode(button) {
+    const codeBlock = button.parentElement.nextElementSibling;
+    const textToCopy = codeBlock.querySelector('code').innerText;
+    
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // 反馈复制成功
+        const originalText = button.textContent;
+        button.textContent = '已复制!';
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }).catch(err => {
+        console.error('无法复制文本: ', err);
+    });
+}
+
+// 代码高亮功能（如果需要，可以引入Prism.js等库）
+// 这里使用简单的类名高亮
+document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('code.language-python');
+    
+    codeBlocks.forEach(block => {
+        let code = block.innerHTML;
+        
+        // 简单的关键词高亮
+        code = code.replace(/(def|class|return|try|except|if|else|for|while|import|from|as|True|False|None)/g, 
+                            '<span class="hljs-keyword">$1</span>');
+        
+        // 字符串高亮
+        code = code.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, 
+                            '<span class="hljs-string">$&</span>');
+        
+        // 数字高亮
+        code = code.replace(/\b(\d+)\b/g, 
+                            '<span class="hljs-number">$1</span>');
+        
+        // 注释高亮
+        code = code.replace(/(#.*)/g, 
+                            '<span class="hljs-comment">$1</span>');
+        
+        // 函数名高亮
+        code = code.replace(/(\w+)\(/g, 
+                            '<span class="hljs-function">$1</span>(');
+        
+        block.innerHTML = code;
+    });
+});
+</script>
+
+<style>
+.code-section {
+    margin: 2em 0;
+    padding: 1em;
+    background-color: #f8f9fa;
+    border-left: 4px solid #4a6bdf;
+    border-radius: 0 5px 5px 0;
+}
+
+.code-section h5 {
+    margin-top: 0;
+    color: #2c4fd6;
+    font-size: 1.1em;
+}
+
+.code-block {
+    background: #2d2d2d;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 1em 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1a1a1a;
+    color: #f0f0f0;
+    padding: 0.5em 1em;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+}
+
+.copy-btn {
+    background: #4a6bdf;
+    color: white;
+    border: none;
+    padding: 0.3em 0.8em;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.copy-btn:hover {
+    background: #2c4fd6;
+}
+
+.code-block pre {
+    margin: 0;
+    padding: 1em;
+    overflow-x: auto;
+}
+
+.code-block code {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: #f8f8f2;
+}
+
+/* 语法高亮颜色 */
+.language-python .hljs-keyword { color: #ff79c6; }
+.language-python .hljs-built_in { color: #8be9fd; }
+.language-python .hljs-string { color: #f1fa8c; }
+.language-python .hljs-number { color: #bd93f9; }
+.language-python .hljs-comment { color: #6272a4; }
+.language-python .hljs-function { color: #50fa7b; }
+.language-python .hljs-params { color: #f8f8f2; }
+</style>
+
 </head>
 <body>
 <header id="title-block-header">
@@ -192,7 +312,7 @@
 <p>“车轮效应”最典型的表现是，当车轮以高速向前旋转时，我们观察到的车轮似乎以较慢的速度向后旋转，或者在某个临界速度下完全静止。随着车速的进一步增加，车轮可能会再次向前旋转，但在视觉上其旋转速度仍然会低于其实际速度。这种错觉尤其在辐条较多、图案重复性高的车轮上更为显著。</p>
 <h3 id="核心原理频闪效应-stroboscopic-effect">3. 核心原理：频闪效应 (Stroboscopic Effect)</h3>
 <p>这种视觉错觉的核心在于“频闪效应”。频闪效应发生在观察到的连续运动被离散地采样时。</p>
-<h4 id="摄像机的工作原理与帧率信息源的离散性">3.1 摄像机的工作原理与帧率——信息源的离散性</h4>
+<h4 id="摄像机的工作原理与帧率信息源的离散性">3.1 摄像机的工作原理与帧率：信息源的离散性</h4>
 <p>在电影和视频中，图像是由一系列静态帧以固定的帧率（Frames Per Second, FPS，例如每秒24帧、30帧或60帧）连续记录和播放而成的。这是一种典型的<strong>离散采样</strong>过程：</p>
 <ol type="1">
 <li><strong>车轮标记物：</strong> 想象车轮上的辐条、轮胎花纹或其他重复性图案作为视觉标记物。</li>
@@ -215,9 +335,9 @@
 <li><strong>空间量子化：</strong> 类似地，成功的视觉交互也需要在空间上满足一定的条件。实验结果显示，视网膜上不同受体组的低于阈值的响应需要在约 3-6 角分的特定空间范围内发生交互。这表明视觉系统在空间上也是以离散的“受体组”或“空间量子”为单位进行处理的。</li>
 </ul>
 <p>Maarten A. Bouman 在《频闪效应下的人类视觉》中挑战了视觉系统作为纯粹模拟处理器的传统观念，提出了一种基于<strong>时空量子化</strong>的感知模型。他的核心论点是，成功的视觉交互，即对刺激的有效感知，并非建立在连续的、无缝的信息流上，而是依赖于离散的量子事件在特定时空“窗口”内的成功相互作用。</p>
-<p>Bouman 指出： &gt; “It has been found that successful visual interactions take place in a period of two consecutive time quanta of about 0.04 s and require a number of sub-threshold receptor responses to interact successfully within these time windows.” &gt; （“研究发现，成功的视觉交互发生在约 0.04 秒的两个连续时间量子周期内，并且需要多个低于阈值的受体反应在这些时间窗内成功地相互作用。”）</p>
-<p>这表明人眼对时间的处理并非无限精细，而是存在一个基本的“时间单元”或“时间量子”，大约为 0.04 秒。</p>
-<p>类似地，在空间维度上，Bouman 的研究也揭示了量子化特性： &gt; “In the same way, successful visual interactions also have to fulfil conditions in space. It turned out that sub-threshold responses from different receptor groups on the retina have to interact within a particular spatial domain of about 3-6 arc min.” &gt; （“同样，成功的视觉交互也必须满足空间条件。结果表明，视网膜上不同受体组的低于阈值的响应必须在约 3-6 弧分的特定空间域内进行相互作用。”）</p>
+<p>Bouman 指出：  “It has been found that successful visual interactions take place in a period of two consecutive time quanta of about 0.04 s and require a number of sub-threshold receptor responses to interact successfully within these time windows.”  （“研究发现，成功的视觉交互发生在一个持续时间约为0.04秒的、由两个连续时间量子组成的周期内，并且需要多个低于阈值的受体反应在这些时间窗内成功地相互作用。”）</p>
+<p>这表明人眼对时间的处理并非无限精细，而是以“时间单元”，即一次有效的视觉感知（约0.04秒，即两个时间量子周期）的周期进行工作的。</p>
+<p>类似地，在空间维度上，Bouman 的研究也揭示了量子化特性：  “In the same way, successful visual interactions also have to fulfil conditions in space. It turned out that sub-threshold responses from different receptor groups on the retina have to interact within a particular spatial domain of about 3-6 arc min.”  （“同样，成功的视觉交互也必须满足空间条件。结果表明，视网膜上不同受体组的低于阈值的响应必须在约 3-6 弧分的特定空间域内进行相互作用。”）</p>
 <p>这进一步证实了视觉系统在空间上也是以离散的“受体组”或“空间量子”为单位进行处理的。这些量子化的处理机制，构成了我们对外部世界进行感知的基础。</p>
 <h4 id="为什么人眼会被骗">4.2 为什么人眼会“被骗”？</h4>
 <p>当我们观看由<strong>离散帧组成</strong>的视频时，人眼仍然会受到频闪效应的强烈影响，这不仅仅是信息源离散性那么简单，更深层的原因在于我们大脑的运动推断机制与视觉系统本身的量子化特性。</p>
@@ -233,16 +353,185 @@
 <li><strong>其他感知现象：</strong> 超视锐度、闪烁融合、知觉竞争等多种视觉和听觉感知现象，也都被Bouman认为可以从这种量子化的时空信号处理中得到解释，进一步强化了这一理论的普适性。</li>
 </ul>
 <h3 id="频闪效应模拟器的技术实现与帧率控制">5. 频闪效应模拟器的技术实现与帧率控制</h3>
-<p>为了直观演示和验证频闪效应，我们开发了一个基于 Python Flask 框架和 Manim 动画库的频闪效应模拟器。该模拟器允许用户调整指针的旋转速度和闪烁频率，并选择不同的渲染质量，进而生成带有详细参数信息的动画视频。</p>
 <h4 id="模拟器架构概述">5.1 模拟器架构概述</h4>
-<p>模拟器核心由以下模块组成： * <strong><code>app.py</code></strong>: Flask 主应用，处理 Web 请求，调度渲染任务。 * <strong><code>manim_manager.py</code></strong>: 负责生成 Manim 动画场景代码，并管理场景文件。 * <strong><code>render_engine.py</code></strong>: 协调 Manim 命令行渲染过程，监控进度。 * <strong><code>utils.py</code></strong>: 包含配置管理、文件管理、进度监控和日志记录工具。</p>
-<h4 id="视频帧率fps的设置与控制证据">5.2 视频帧率（FPS）的设置与控制证据</h4>
-<p>在我们的模拟器中，视频的帧率是精确可控的核心参数，这直接影响着频闪效应的视觉呈现效果。帧率的设置和传递主要通过以下代码片段实现：</p>
-<ol type="1">
-<li><p><strong><code>config.ini</code> 中的质量设置定义：</strong> 在 <code>utils.py</code> 文件中，<code>ConfigManager</code> 类从 <code>config.ini</code> 文件加载 Manim 渲染的质量设置。<code>QUALITY_SETTINGS</code> 字符串（通过 <code>json.loads</code> 解析）定义了不同 <code>quality_level</code> 对应的帧率： <code>python     # utils.py - ConfigManager.create_default_config() 或 config.ini 文件内容     self.config['MANIM'] = {         'QUALITY_SETTINGS': '{"1": {"flag": "-ql", "name": "快速", "resolution": "480p", "fps": 15, "time_estimate": "15-30秒"}, "2": {"flag": "-qm", "name": "标准", "resolution": "720p", "fps": 30, "time_estimate": "30-60秒"}, "3": {"flag": "-qh", "name": "高质量", "resolution": "1080p", "fps": 60, "time_estimate": "60-120秒"}}'     }</code> 这里明确定义了 <code>render_quality</code> 为 <code>1</code> (快速) 对应 <strong>15 FPS</strong>，<code>2</code> (标准) 对应 <strong>30 FPS</strong>，<code>3</code> (高质量) 对应 <strong>60 FPS</strong>。</p></li>
-<li><p><strong><code>app.py</code> 中接收前端参数：</strong> Flask 应用通过 <code>/generate_animation</code> 路由接收用户选择的 <code>render_quality</code>： <code>python     # app.py - generate_animation()     @app.route('/generate_animation', methods=['POST'])     def generate_animation():         render_quality = int(request.form.get('render_quality', 1)) # 默认值是 1         success = render_engine.render_animation(             rotation_speed_rpm,             flash_frequency_hz,             render_quality, # 此参数传递给渲染引擎，决定最终帧率             unique_id         )</code> <code>render_quality</code> 的值 (<code>1</code>, <code>2</code>, 或 <code>3</code>) 被传递给 <code>render_engine</code>，以选择对应的帧率。</p></li>
-<li><p><strong><code>render_engine.py</code> 中构建 Manim 命令：</strong> <code>RenderEngine</code> 使用 <code>quality_level</code> 获取对应的 FPS，并将其作为命令行参数传递给 Manim： <code>python     # render_engine.py - _render_thread()     class RenderEngine:         def _render_thread(self, rotation_speed: float, flash_frequency: float,                            quality_level: int, unique_id: str, estimated_time: str):             quality_setting = scene_manager.get_quality_setting(quality_level) # 获取 FPS 配置             manim_command = [                 sys.executable, "-m", "manim",                 "--fps", str(quality_setting.get('fps', 60)), # Manim 命令行参数设置 FPS                ]</code> 这一步确保 Manim 渲染器以 <code>config.ini</code> 中为所选 <code>render_quality</code> 定义的精确 FPS 输出视频。</p></li>
-</ol>
+<p>为了直观演示和验证频闪效应，我们开发了一个基于 Python Flask 框架和 Manim 动画库的频闪效应模拟器。该模拟器允许用户调整指针的旋转速度和闪烁频率，并选择不同的渲染质量，进而生成带有详细参数信息的动画视频。</p>
+
+<div class="module-table">
+<table>
+<caption>表 5.1: 频闪效应模拟器核心模块功能描述</caption>
+<thead>
+<tr>
+<th style="text-align: left;">模块名称</th>
+<th style="text-align: left;">主要功能</th>
+<th style="text-align: left;">职责说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>app.py</code></td>
+<td style="text-align: left;">Flask 主应用</td>
+<td style="text-align: left;">处理 Web 请求，调度渲染任务，作为整个系统的 HTTP 接口和任务协调中心。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>manim_manager.py</code></td>
+<td style="text-align: left;">Manim 场景管理</td>
+<td style="text-align: left;">负责动态生成 Manim 动画场景代码，管理场景文件的创建、更新与生命周期。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>render_engine.py</code></td>
+<td style="text-align: left;">渲染引擎</td>
+<td style="text-align: left;">协调 Manim 命令行渲染过程，实时监控任务进度与状态，处理渲染异常。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>utils.py</code></td>
+<td style="text-align: left;">工具集</td>
+<td style="text-align: left;">提供配置管理、文件操作、进度监控和日志记录等基础工具函数支持。</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h4 id="视频帧率fps的设置与控制证据">5.2 视频帧率（FPS）的设置与控制</h4>
+<p>在我们的模拟器中，视频的帧率是精确可控的核心参数，这直接影响着频闪效应的视觉呈现效果。帧率的设置和传递主要通过以下代码实现：</p>
+
+<div class="code-section">
+    <h5>5.2.1 配置文件中的质量设置定义</h5>
+    <p>在 <code>utils.py</code> 文件中，<code>ConfigManager</code> 类从 <code>config.ini</code> 文件加载 Manim 渲染的质量设置：</p>
+    
+    <div class="code-block">
+        <div class="code-header">
+            <span>utils.py - ConfigManager 类部分代码</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+        <pre><code class="language-python"># 配置管理器中定义不同质量级别的参数
+QUALITY_SETTINGS = {
+    "1": {
+        "flag": "-ql",
+        "name": "快速",
+        "resolution": "480p",
+        "fps": 15,  # 帧率设置为15 FPS
+        "time_estimate": "15-30秒"
+    },
+    "2": {
+        "flag": "-qm",
+        "name": "标准",
+        "resolution": "720p", 
+        "fps": 30,  # 帧率设置为30 FPS
+        "time_estimate": "30-60秒"
+    },
+    "3": {
+        "flag": "-qh", 
+        "name": "高质量",
+        "resolution": "1080p",
+        "fps": 60,  # 帧率设置为60 FPS
+        "time_estimate": "60-120秒"
+    }
+}</code></pre>
+    </div>
+</div>
+
+<div class="code-section">
+    <h5>5.2.2 前端参数接收与处理</h5>
+    <p>Flask 应用通过 <code>/generate_animation</code> 路由接收用户选择的 <code>render_quality</code>：</p>
+    
+    <div class="code-block">
+        <div class="code-header">
+            <span>app.py - generate_animation() 路由处理</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+        <pre><code class="language-python">@app.route('/generate_animation', methods=['POST'])
+def generate_animation():
+    # 从表单获取渲染质量参数
+    render_quality = int(request.form.get('render_quality', 1))  # 默认值为1
+    
+    # 获取其他动画参数
+    rotation_speed_rpm = float(request.form.get('rotation_speed', 30))
+    flash_frequency_hz = float(request.form.get('flash_frequency', 0.5))
+    
+    # 生成唯一标识符
+    unique_id = str(uuid.uuid4())[:8]
+    
+    # 调用渲染引擎
+    success = render_engine.render_animation(
+        rotation_speed_rpm,
+        flash_frequency_hz,
+        render_quality,  # 此参数决定最终帧率
+        unique_id
+    )
+    
+    if success:
+        return jsonify({"status": "success", "id": unique_id})
+    else:
+        return jsonify({"status": "error", "message": "渲染失败"}), 500</code></pre>
+    </div>
+</div>
+
+<div class="code-section">
+    <h5>5.2.3 渲染引擎中的帧率控制</h5>
+    <p><code>RenderEngine</code> 使用 <code>quality_level</code> 获取对应的 FPS，并将其作为命令行参数传递给 Manim：</p>
+    
+    <div class="code-block">
+        <div class="code-header">
+            <span>render_engine.py - 渲染线程实现</span>
+            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        </div>
+        <pre><code class="language-python">def _render_thread(self, rotation_speed: float, flash_frequency: float,
+                   quality_level: int, unique_id: str, estimated_time: str):
+    """执行渲染的线程函数"""
+    
+    try:
+        # 获取质量设置
+        quality_setting = scene_manager.get_quality_setting(quality_level)
+        
+        # 构建Manim命令
+        manim_command = [
+            sys.executable, "-m", "manim",
+            "--fps", str(quality_setting.get('fps', 60)),  # 设置输出视频的FPS
+            quality_setting.get('flag', '-qh'),
+            "--progress_bar", "none",
+            "-o", f"output_{unique_id}",
+            f"scene_{unique_id}.py"
+        ]
+        
+        # 记录开始时间
+        start_time = time.time()
+        
+        # 执行渲染命令
+        process = subprocess.Popen(
+            manim_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            cwd=current_app.config['RENDER_DIR'],
+            universal_newlines=True
+        )
+        
+        # 实时捕获输出
+        while True:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                self._parse_progress(output, unique_id)
+        
+        # 检查渲染结果
+        return_code = process.poll()
+        if return_code == 0:
+            self._update_progress(unique_id, 100, "完成")
+            return True
+        else:
+            error_output = process.stderr.read()
+            logger.error(f"渲染失败: {error_output}")
+            self._update_progress(unique_id, 0, f"错误: {error_output}")
+            return False
+            
+    except Exception as e:
+        logger.exception("渲染线程异常")
+        self._update_progress(unique_id, 0, f"异常: {str(e)}")
+        return False</code></pre>
+    </div>
+</div>
+
+
 <h4 id="实验演示视频">5.3 实验演示视频</h4>
 <p>以下视频系列通过调整模拟器的参数，直观地展示了频闪效应和不同帧率对视觉感知的影响。</p>
 <p><strong>实验一：探索不同闪烁频率下的频闪效应 (固定 FPS)</strong> * <strong>条件：</strong> 视频刷新率 <strong>30 FPS</strong> (<code>render_quality=2</code>)，指针转动频率 <strong>0.5 Hz (30 RPM)</strong>。</p>
@@ -263,32 +552,32 @@
 <tr class="odd">
 <td style="text-align: left;"><strong>视频 A-1</strong></td>
 <td style="text-align: left;">0 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_1.mp4">A_1.mp4</a></video> <br/> <strong>分析：</strong> 无闪烁，指针连续向前旋转，作为对照组。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_1.mp4">A_1.mp4</a></video> <br/> <strong>分析：</strong> 无闪烁，指针连续向前旋转，作为对照组。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>视频 A-2</strong></td>
 <td style="text-align: left;">0.5 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_2.mp4">A_2.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率恰好等于指针旋转频率，指针在视觉上呈现完全静止状态。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_2.mp4">A_2.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率恰好等于指针旋转频率，指针在视觉上呈现完全静止状态。</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>视频 A-3</strong></td>
 <td style="text-align: left;">0.4 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_3.mp4">A_3.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略低于指针旋转频率，指针在视觉上呈现慢速反向旋转。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_3.mp4">A_3.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略低于指针旋转频率，指针在视觉上呈现慢速反向旋转。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>视频 A-4</strong></td>
 <td style="text-align: left;">0.6 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_4.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_4.mp4">A_4.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略高于指针旋转频率，指针在视觉上呈现慢速正向旋转。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_4.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_4.mp4">A_4.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率略高于指针旋转频率，指针在视觉上呈现慢速正向旋转。</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>视频 A-5</strong></td>
 <td style="text-align: left;">0.05 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_5.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_5.mp4">A_5.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率极低，每次闪烁时指针已转过较大角度，视觉上呈现不连续的跳跃式反转。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_5.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_5.mp4">A_5.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率极低，每次闪烁时指针已转过较大角度，视觉上呈现不连续的跳跃式反转。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>视频 A-6</strong></td>
 <td style="text-align: left;">1.0 Hz</td>
-<td style="text-align: left;"><video src="../experiment_videos/A_6.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/A_6.mp4">A_6.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率是旋转频率的两倍，指针仍向前旋转，但可能与实际速度感知有差异。</td>
+<td style="text-align: left;"><video src="./experiment_videos/A_6.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/A_6.mp4">A_6.mp4</a></video> <br/> <strong>分析：</strong> 闪烁频率是旋转频率的两倍，指针仍向前旋转，但可能与实际速度感知有差异。</td>
 </tr>
 </tbody>
 </table>
@@ -313,19 +602,19 @@
 <td style="text-align: left;"><strong>视频 B-1</strong></td>
 <td style="text-align: left;">15 FPS</td>
 <td style="text-align: left;"><code>1</code></td>
-<td style="text-align: left;"><video src="../experiment_videos/B_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_1.mp4">B_1.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，但由于帧率较低，运动感可能较为卡顿和不连贯。</td>
+<td style="text-align: left;"><video src="./experiment_videos/B_1.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_1.mp4">B_1.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，但由于帧率较低，运动感可能较为卡顿和不连贯。</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>视频 B-2</strong></td>
 <td style="text-align: left;">30 FPS</td>
 <td style="text-align: left;"><code>2</code></td>
-<td style="text-align: left;"><video src="../experiment_videos/B_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_2.mp4">B_2.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，流畅度有所提升，视觉效果更连续。</td>
+<td style="text-align: left;"><video src="./experiment_videos/B_2.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_2.mp4">B_2.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，流畅度有所提升，视觉效果更连续。</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>视频 B-3</strong></td>
 <td style="text-align: left;">60 FPS</td>
 <td style="text-align: left;"><code>3</code></td>
-<td style="text-align: left;"><video src="../experiment_videos/B_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="../experiment_videos/B_3.mp4">B_3.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，运动最为流畅，视觉错觉更加逼真，接近人眼在真实高频频闪灯下的感知。</td>
+<td style="text-align: left;"><video src="./experiment_videos/B_3.mp4" type="video/mp4" controls playsinline width="480">无法内嵌播放时，点击下载：<a href="./experiment_videos/B_3.mp4">B_3.mp4</a></video> <br/> <strong>分析：</strong> 指针反向旋转，运动最为流畅，视觉错觉更加逼真，接近人眼在真实高频频闪灯下的感知。</td>
 </tr>
 </tbody>
 </table>

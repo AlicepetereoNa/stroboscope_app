@@ -72,9 +72,9 @@ Maarten A. Bouman 在《频闪效应下的人类视觉》中挑战了视觉系�
 
 Bouman 指出：
 > "It has been found that successful visual interactions take place in a period of two consecutive time quanta of about 0.04 s and require a number of sub-threshold receptor responses to interact successfully within these time windows."
-> （“研究发现，成功的视觉交互发生在约 0.04 秒的两个连续时间量子周期内，并且需要多个低于阈值的受体反应在这些时间窗内成功地相互作用。”）
+> （““研究发现，成功的视觉交互发生在一个持续时间约为0.04秒的、由两个连续时间量子组成的周期内，并且需要多个低于阈值的受体反应在这些时间窗内成功地相互作用。”）
 
-这表明人眼对时间的处理并非无限精细，而是存在一个基本的“时间单元”或“时间量子”，大约为 0.04 秒。
+这表明人眼对时间的处理并非无限精细，而是以“时间单元”，即一次有效的视觉感知（约0.04秒，即两个时间量子周期）的周期进行工作的。
 
 类似地，在空间维度上，Bouman 的研究也揭示了量子化特性：
 > "In the same way, successful visual interactions also have to fulfil conditions in space. It turned out that sub-threshold responses from different receptor groups on the retina have to interact within a particular spatial domain of about 3-6 arc min."
